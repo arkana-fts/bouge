@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Automatically exported from Blender v2.56 (sub 1) using the bouge exporter by Lucas Beyer -->
+<MATERIAL NAME="box">
+  <PROPERTY NAME="map">box.png</PROPERTY>
+  <PROPERTY NAME="specular">1 1 1 1</PROPERTY>
+  <PROPERTY NAME="diffuse">0.8 0.8 0.8 1</PROPERTY>
+  <PROPERTY NAME="shininess">50</PROPERTY>
+</MATERIAL>
+
+<MATERIAL NAME="sphere">
+  <PROPERTY NAME="map">sphere.png</PROPERTY>
+  <PROPERTY NAME="specular">1 1 1 1</PROPERTY>
+  <PROPERTY NAME="diffuse">0.8 0.8 0.8 1</PROPERTY>
+  <PROPERTY NAME="shininess">50</PROPERTY>
+</MATERIAL>
+

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Automatically exported from Blender v2.56 (sub 1) using the bouge exporter by Lucas Beyer -->
+<MATSET NAME="default">
+  <LINK SUBMESH="Cube.001">box</LINK>
+  <LINK SUBMESH="Cube">box</LINK>
+  <LINK SUBMESH="Sphere Sphere.001">sphere</LINK>
+</MATSET>
+

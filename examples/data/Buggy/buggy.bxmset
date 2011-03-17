@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<MATSET NAME="buggy orange">
+    <LINK SUBMESH="submesh0">carrozzeria orange</LINK>
+    <LINK SUBMESH="submesh1">ruote</LINK>
+    <LINK SUBMESH="submesh2">ruote</LINK>
+    <LINK SUBMESH="submesh3">ruote</LINK>
+    <LINK SUBMESH="submesh4">ruote</LINK>
+</MATSET>
+<MATSET NAME="buggy red">
+    <LINK SUBMESH="submesh0">carrozzeria red</LINK>
+    <LINK SUBMESH="submesh1">ruote</LINK>
+    <LINK SUBMESH="submesh2">ruote</LINK>
+    <LINK SUBMESH="submesh3">ruote</LINK>
+    <LINK SUBMESH="submesh4">ruote</LINK>
+</MATSET>
+<MATSET NAME="buggy yellow">
+    <LINK SUBMESH="submesh0">carrozzeria yellow</LINK>
+    <LINK SUBMESH="submesh1">ruote</LINK>
+    <LINK SUBMESH="submesh2">ruote</LINK>
+    <LINK SUBMESH="submesh3">ruote</LINK>
+    <LINK SUBMESH="submesh4">ruote</LINK>
+</MATSET>
+<MATSET NAME="buggy blue">
+    <LINK SUBMESH="submesh0">carrozzeria blue</LINK>
+    <LINK SUBMESH="submesh1">ruote</LINK>
+    <LINK SUBMESH="submesh2">ruote</LINK>
+    <LINK SUBMESH="submesh3">ruote</LINK>
+    <LINK SUBMESH="submesh4">ruote</LINK>
+</MATSET>
+<MATSET NAME="chromed red">
+    <LINK SUBMESH="submesh0">chrome red</LINK>
+    <LINK SUBMESH="submesh1">matt black</LINK>
+    <LINK SUBMESH="submesh2">matt black</LINK>
+    <LINK SUBMESH="submesh3">matt black</LINK>
+    <LINK SUBMESH="submesh4">matt black</LINK>
+</MATSET>

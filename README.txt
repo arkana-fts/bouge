@@ -12,9 +12,12 @@
         c. Use moulin bouge as a static library
         d. Embed moulin bouge right into your project
         e. An important note to MSVC users
+        f. Integration using CMake
     3. Learning to use moulin bouge
         a. Game developers
+            The examples
         b. Game artists
+            The examples
     4. Known issues
 
 1. The goal(s) of moulin bouge
@@ -113,7 +116,6 @@
 
     e. An important note to MSVC users
     ----------------------------------
-
         In MSVC, it is an important question whether to link to the CRT (C runtime)
         statically or dynamically and whether to use the multithreaded version or not.
 
@@ -125,6 +127,13 @@
 
         Note that this version not always works yet. If you have too much trouble,
         you might just go with "d. Embed moulin bouge right into your project".
+
+    f. Integration using CMake
+    --------------------------
+        In the case your project also uses CMake, you can try to find if bouge
+        is installed on the pc already by using the Findbouge CMake macro.
+
+        TODO: Examples, more explanation?
 
 3. Learning to use moulin bouge
 ===============================
@@ -139,6 +148,43 @@
 
         Game developers should read the "moulin bouge tutorial" available either
         in the "doc" subdirectory or on moulin bouge's webpage.
+
+        The examples:
+        - - - - - - -
+            Game developers usually learn by examples. That's why moulin bouge
+            comes with a bunch of examples on its usage.
+
+            To compile the examples, you have to turn that option ON in CMake,
+            as it is off by default! (Because of compilation times and deps.)
+
+            The examples show various use-cases, you should mainly inspire from
+            the viewer-glut and staticviewer-glut examples:
+
+                - moulin-bouge-glut: (TODO)
+                    A full demo program with a little GUI useful for testing
+                    any aspect of the model, using OpenGL
+
+                - viewer-glut:
+                    An very complete and optimized example on how to use animated
+                    models using modern OpenGL and GLSL.
+
+                - staticviewer-glut:
+                    A viewer optimized for static models, that is, without
+                    any animations. Uses modern OpenGL and GLSL.
+
+                - skeletonviewer-glut:
+                    Shows only the (animated) skeleton, not the mesh.
+                    suboptimally programmed.
+
+                - cal3dx-to-bougexml:
+                    A converter loading files in Cal3D xml format and saving
+                    them again in bouge's native XML format.
+
+                - io:
+                    Loading and saving again.
+
+                - plot-tf:
+                    Create a plot (png) of any time function
 
     b. Game artists
     ---------------
@@ -155,6 +201,13 @@
 
         All these documents can be found on the moulin bouge's webpage and in
         the "doc" subdirectory here.
+
+            The examples:
+            - - - - - - -
+
+            You can also have a look at the ''examples/data'' subfolder, as
+            it includes the "source" files of most example models. If you
+            are lucky, the source file has been made using your program :)
 
 4. Known Issues
 ===============

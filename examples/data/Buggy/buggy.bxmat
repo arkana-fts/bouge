@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<MATERIAL NAME="carrozzeria red">
+    <PROPERTY NAME="ambient">0.25 0.25 0.25</PROPERTY>
+    <PROPERTY NAME="diffuse">0.34 0.34 0.34</PROPERTY>
+    <PROPERTY NAME="specular">0.35 0.35 0.35</PROPERTY>
+    <PROPERTY NAME="shininess">1.0</PROPERTY>
+    <PROPERTY NAME="diffusemap">buggydifff2.png</PROPERTY>
+    <PROPERTY NAME="normalmap">normaltangent.tga</PROPERTY>
+    <PROPERTY NAME="diffusemap2">buggydirt.png</PROPERTY>
+</MATERIAL>
+
+<MATERIAL NAME="carrozzeria yellow">
+    <PROPERTY NAME="ambient">0.25 0.25 0.25</PROPERTY>
+    <PROPERTY NAME="diffuse">0.34 0.34 0.34</PROPERTY>
+    <PROPERTY NAME="specular">0.35 0.35 0.35</PROPERTY>
+    <PROPERTY NAME="shininess">1.0</PROPERTY>
+    <PROPERTY NAME="diffusemap">buggydifff3.png</PROPERTY>
+    <PROPERTY NAME="normalmap">normaltangent.tga</PROPERTY>
+    <PROPERTY NAME="diffusemap2">buggydirt.png</PROPERTY>
+</MATERIAL>
+
+<MATERIAL NAME="carrozzeria orange">
+    <PROPERTY NAME="ambient">0.25 0.25 0.25</PROPERTY>
+    <PROPERTY NAME="diffuse">0.34 0.34 0.34</PROPERTY>
+    <PROPERTY NAME="specular">0.35 0.35 0.35</PROPERTY>
+    <PROPERTY NAME="shininess">1.0</PROPERTY>
+    <PROPERTY NAME="diffusemap">buggydifff.png</PROPERTY>
+    <PROPERTY NAME="normalmap">normaltangent.tga</PROPERTY>
+    <PROPERTY NAME="diffusemap2">buggydirt.png</PROPERTY>
+</MATERIAL>
+
+<MATERIAL NAME="carrozzeria blue">
+    <PROPERTY NAME="ambient">0.25 0.25 0.25</PROPERTY>
+    <PROPERTY NAME="diffuse">0.34 0.34 0.34</PROPERTY>
+    <PROPERTY NAME="specular">0.35 0.35 0.35</PROPERTY>
+    <PROPERTY NAME="shininess">1.0</PROPERTY>
+    <PROPERTY NAME="diffusemap">buggydifff4.png</PROPERTY>
+    <PROPERTY NAME="normalmap">normaltangent.tga</PROPERTY>
+    <PROPERTY NAME="diffusemap2">buggydirt.png</PROPERTY>
+</MATERIAL>
+
+<MATERIAL NAME="ruote">
+    <PROPERTY NAME="ambient">0.27 0.27 0.27</PROPERTY>
+    <PROPERTY NAME="diffuse">0.34 0.34 0.34</PROPERTY>
+    <PROPERTY NAME="specular">0 0 0</PROPERTY>
+    <PROPERTY NAME="shininess">1.0</PROPERTY>
+    <PROPERTY NAME="diffusemap">buggydifff4.png</PROPERTY>
+    <PROPERTY NAME="normalmap">normaltangent.tga</PROPERTY>
+    <PROPERTY NAME="diffusemap2">buggydirt.png</PROPERTY>
+</MATERIAL>
+
+<MATERIAL NAME="chrome red">
+    <PROPERTY NAME="ambient">0.1 0.1 0.1</PROPERTY>
+    <PROPERTY NAME="diffuse">0.5 0.0 0.0</PROPERTY>
+    <PROPERTY NAME="specular">0.5 0.5 0.5</PROPERTY>
+    <PROPERTY NAME="shininess">0.2</PROPERTY>
+    <PROPERTY NAME="diffusemap">buggydifffred.png</PROPERTY>
+</MATERIAL>
+
+<MATERIAL NAME="matt black">
+    <PROPERTY NAME="ambient">0.1 0.1 0.1</PROPERTY>
+    <PROPERTY NAME="diffuse">0.1 0.1 0.1</PROPERTY>
+    <PROPERTY NAME="specular">0.25 0.25 0.25</PROPERTY>
+    <PROPERTY NAME="shininess">1.5</PROPERTY>
+</MATERIAL>
+

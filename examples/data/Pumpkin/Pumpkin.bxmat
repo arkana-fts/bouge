@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Automatically exported from Blender v2.56 (sub 1) using the bouge exporter by Lucas Beyer -->
+<MATERIAL NAME="SadFace">
+  <PROPERTY NAME="map">Faces/SadFace.png</PROPERTY>
+  <PROPERTY NAME="specular">1 1 1 1</PROPERTY>
+  <PROPERTY NAME="diffuse">0.8 0.8 0.8 1</PROPERTY>
+  <PROPERTY NAME="shininess">1</PROPERTY>
+</MATERIAL>
+
+<MATERIAL NAME="Monster">
+  <PROPERTY NAME="map">Faces/Monster.png</PROPERTY>
+  <PROPERTY NAME="specular">0 0 0 1</PROPERTY>
+  <PROPERTY NAME="diffuse">0.8 0.8 0.8 1</PROPERTY>
+  <PROPERTY NAME="shininess">1</PROPERTY>
+</MATERIAL>
+
+<MATERIAL NAME="Circley">
+  <PROPERTY NAME="map">Faces/Circley.png</PROPERTY>
+  <PROPERTY NAME="specular">0 0 0 1</PROPERTY>
+  <PROPERTY NAME="diffuse">0.8 0.8 0.8 1</PROPERTY>
+  <PROPERTY NAME="shininess">1</PROPERTY>
+</MATERIAL>
+
+<MATERIAL NAME="Kitty">
+  <PROPERTY NAME="map">Faces/Kitty.png</PROPERTY>
+  <PROPERTY NAME="specular">0 0 0 1</PROPERTY>
+  <PROPERTY NAME="diffuse">0.8 0.8 0.8 1</PROPERTY>
+  <PROPERTY NAME="shininess">1</PROPERTY>
+</MATERIAL>
+
+<MATERIAL NAME="Spider">
+  <PROPERTY NAME="map">Faces/Spider.png</PROPERTY>
+  <PROPERTY NAME="specular">0 0 0 1</PROPERTY>
+  <PROPERTY NAME="diffuse">0.8 0.8 0.8 1</PROPERTY>
+  <PROPERTY NAME="shininess">1</PROPERTY>
+</MATERIAL>
+
+<MATERIAL NAME="HappyFaceWithEyes">
+  <PROPERTY NAME="map">Faces/HappyFaceWithEyes.png</PROPERTY>
+  <PROPERTY NAME="specular">0 0 0 1</PROPERTY>
+  <PROPERTY NAME="diffuse">0.8 0.8 0.8 1</PROPERTY>
+  <PROPERTY NAME="shininess">1</PROPERTY>
+</MATERIAL>
+
+<MATERIAL NAME="HappyFace">
+  <PROPERTY NAME="map">Faces/HappyFace.png</PROPERTY>
+  <PROPERTY NAME="specular">0 0 0 1</PROPERTY>
+  <PROPERTY NAME="diffuse">0.8 0.8 0.8 1</PROPERTY>
+  <PROPERTY NAME="shininess">1</PROPERTY>
+</MATERIAL>
+
+<MATERIAL NAME="Cyclopes">
+  <PROPERTY NAME="map">Faces/Cyclopes.png</PROPERTY>
+  <PROPERTY NAME="specular">0 0 0 1</PROPERTY>
+  <PROPERTY NAME="diffuse">0.8 0.8 0.8 1</PROPERTY>
+  <PROPERTY NAME="shininess">1</PROPERTY>
+</MATERIAL>
+
+<MATERIAL NAME="SadFaceWithEyes">
+  <PROPERTY NAME="map">Faces/SadFaceWithEyes.png</PROPERTY>
+  <PROPERTY NAME="specular">0 0 0 1</PROPERTY>
+  <PROPERTY NAME="diffuse">0.8 0.8 0.8 1</PROPERTY>
+  <PROPERTY NAME="shininess">1</PROPERTY>
+</MATERIAL>
+
+<MATERIAL NAME="CircleyCrossEyed">
+  <PROPERTY NAME="map">Faces/CircleyCrossEyed.png</PROPERTY>
+  <PROPERTY NAME="specular">0 0 0 1</PROPERTY>
+  <PROPERTY NAME="diffuse">0.8 0.8 0.8 1</PROPERTY>
+  <PROPERTY NAME="shininess">1</PROPERTY>
+</MATERIAL>
+
+<MATERIAL NAME="Pumpkin">
+  <PROPERTY NAME="map">Faces/Pumpkin.png</PROPERTY>
+  <PROPERTY NAME="specular">0 0 0 1</PROPERTY>
+  <PROPERTY NAME="diffuse">0.8 0.8 0.8 1</PROPERTY>
+  <PROPERTY NAME="shininess">1</PROPERTY>
+</MATERIAL>
+

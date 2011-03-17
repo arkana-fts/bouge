@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Automatically exported from Blender v2.56 (sub 1) using the bouge exporter by Lucas Beyer -->
+<MATSET NAME="SadFace">
+  <LINK SUBMESH="Sphere.006 Sphere.008">SadFace</LINK>
+</MATSET>
+
+<MATSET NAME="Monster">
+  <LINK SUBMESH="Sphere.006 Sphere.008">Monster</LINK>
+</MATSET>
+
+<MATSET NAME="Circley">
+  <LINK SUBMESH="Sphere.006 Sphere.008">Circley</LINK>
+</MATSET>
+
+<MATSET NAME="Kitty">
+  <LINK SUBMESH="Sphere.006 Sphere.008">Kitty</LINK>
+</MATSET>
+
+<MATSET NAME="Spider">
+  <LINK SUBMESH="Sphere.006 Sphere.008">Spider</LINK>
+</MATSET>
+
+<MATSET NAME="HappyFaceWithEyes">
+  <LINK SUBMESH="Sphere.006 Sphere.008">HappyFaceWithEyes</LINK>
+</MATSET>
+
+<MATSET NAME="HappyFace">
+  <LINK SUBMESH="Sphere.006 Sphere.008">HappyFace</LINK>
+</MATSET>
+
+<MATSET NAME="Cyclopes">
+  <LINK SUBMESH="Sphere.006 Sphere.008">Cyclopes</LINK>
+</MATSET>
+
+<MATSET NAME="SadFaceWithEyes">
+  <LINK SUBMESH="Sphere.006 Sphere.008">SadFaceWithEyes</LINK>
+</MATSET>
+
+<MATSET NAME="CircleyCrossEyed">
+  <LINK SUBMESH="Sphere.006 Sphere.008">CircleyCrossEyed</LINK>
+</MATSET>
+
+<MATSET NAME="Pumpkin">
+  <LINK SUBMESH="Sphere.006 Sphere.008">Pumpkin</LINK>
+</MATSET>
+

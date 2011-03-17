@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<SKELETON NAME="model.xsf">
+    <BONE NAME="Root" LENGTH="1" RELPOSITION="0 0 0" RELROTATION="-0 -0 -0 -1">
+        <BONE NAME="BackLeft" LENGTH="1" RELPOSITION="-1.32 -1.44 0.54012" RELROTATION="-0 -0 -0 -1" />
+        <BONE NAME="BackRight" LENGTH="0.5" RELPOSITION="1.266 -1.44245 0.53984" RELROTATION="-0 0 -0 -1" />
+        <BONE NAME="FrontLeft" LENGTH="0.5" RELPOSITION="-1.15 1.5 0.53" RELROTATION="-0 -0 -0 -1" />
+        <BONE NAME="FrontRight" LENGTH="0.5" RELPOSITION="1.15 1.5 0.53" RELROTATION="-0 0 -0 -1" />
+    </BONE>
+</SKELETON>

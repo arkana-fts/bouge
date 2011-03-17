@@ -1,0 +1,45 @@
+TODO:
+=====
+    * Every (?) class got a "name" attribute (and pass by value in constructor and setter)
+    * Exception type consistency. Own types!
+    * All iterators for begin/end/==/!=
+        -> http://www.cplusplus.com/reference/std/iterator/iterator/
+    * Make all iterators (at least) bidirectional, with ++i, --i (and i++, i--)
+        -> http://www.cplusplus.com/reference/std/iterator/BidirectionalIterator/
+    * const iterator's accessors are also const methods!
+    * const accessors also for non-const iterators!
+        -> Probably look at CoreMode::animation_iterator.
+    * All headers include the stl stuff they need!
+    * Test all kinds of invalid data
+    * Pass by value/by reference consistently: by value when copying, by ref when only reading.
+    * Parameters as const when only accessing
+    * Moulin Bouge complete example app
+
+    * If no keyframe at 0.0, copy default pose there!
+    * Negative keyframe?
+
+    * Only talk about "action" and "cycle", not "oneshot"
+
+    * Test on windobe, static and dll!
+    * avoid shared ptrs?
+
+DOCNOTES:
+=========
+    * Often times it is faster to use a getter directly and handle inexistent entries using the exceptions, rather than first checking if it is present, then getting it.
+    * All submeshes NEED not to share vertices! If that is the case, the exporter should duplicate the vertex!
+    * It is much quicker to set the speed of an animation when starting to play it rather than afterwards!
+    * Stopping, slowing, ... animations "by name" does it for ALL animations with that name in the model instance, that is basically the type of animation!
+        * say one model instance is playing two "walk" animations simultaneously (realistic?). then stop("walk") stops both!
+
+IDEAS:
+======
+    * matrix have a data pool, instead of deleting, add to pool.
+        * (because profiling shows most time is spent in matrix c'tor and d'tor)
+
+DONE (but continuously recheck):
+================================
+    v Check if every class got a UserData::Ptr m_pUserData
+    v Check if every exported class has BOUGE_API
+    v Every header includes: <bouge/bougefwd.hpp>
+    v } // namespace bouge
+    v Every class got a Ptr typedef

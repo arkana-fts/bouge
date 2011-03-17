@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Automatically exported from Blender v2.56 (sub 1) using the bouge exporter by Lucas Beyer -->
+<SKELETON NAME="double_articulation">
+  <BONE NAME="First" LENGTH="2.5" RELPOSITION="0 0 0" RELROTATION="0 0 0 1">
+    <BONE NAME="Second" LENGTH="3" RELPOSITION="0 2.5 0" RELROTATION="0 0 -0.707107 0.707107">
+      <BONE NAME="Third" LENGTH="3" RELPOSITION="0 3 0" RELROTATION="0 0 0.707107 0.707107">
+      </BONE>
+    </BONE>
+  </BONE>
+</SKELETON>
+

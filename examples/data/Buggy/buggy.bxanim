@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ANIMATION NAME="TurnLeft.xaf" ENDCONTROL="repeat">
+    <TRACK BONE="BackLeft">
+        <KEYFRAME TIME="0">
+            <TRANSLATION>0 0 0</TRANSLATION>
+            <ROTATION>0 0 0 1</ROTATION>
+        </KEYFRAME>
+        <KEYFRAME TIME="1">
+            <TRANSLATION>0 0 0</TRANSLATION>
+            <ROTATION>0 0 -0.173649 0.984805</ROTATION>
+        </KEYFRAME>
+        <KEYFRAME TIME="2">
+            <TRANSLATION>0 0 0</TRANSLATION>
+            <ROTATION>0 0 0 1</ROTATION>
+        </KEYFRAME>
+    </TRACK>
+    <TRACK BONE="BackRight">
+        <KEYFRAME TIME="0">
+            <TRANSLATION>0 0 0</TRANSLATION>
+            <ROTATION>0 0 0 1</ROTATION>
+        </KEYFRAME>
+        <KEYFRAME TIME="1">
+            <TRANSLATION>0 0 0</TRANSLATION>
+            <ROTATION>0 0 -0.173649 0.984805</ROTATION>
+        </KEYFRAME>
+        <KEYFRAME TIME="2">
+            <TRANSLATION>0 0 0</TRANSLATION>
+            <ROTATION>0 0 0 1</ROTATION>
+        </KEYFRAME>
+    </TRACK>
+    <TRACK BONE="FrontLeft">
+        <KEYFRAME TIME="0">
+            <TRANSLATION>0 0 0</TRANSLATION>
+            <ROTATION>0 0 0 1</ROTATION>
+        </KEYFRAME>
+        <KEYFRAME TIME="1">
+            <TRANSLATION>0 0 0</TRANSLATION>
+            <ROTATION>0 0 0.173649 0.984805</ROTATION>
+        </KEYFRAME>
+        <KEYFRAME TIME="2">
+            <TRANSLATION>0 0 0</TRANSLATION>
+            <ROTATION>0 0 0 1</ROTATION>
+        </KEYFRAME>
+    </TRACK>
+    <TRACK BONE="FrontRight">
+        <KEYFRAME TIME="0">
+            <TRANSLATION>0 0 0</TRANSLATION>
+            <ROTATION>0 0 0 1</ROTATION>
+        </KEYFRAME>
+        <KEYFRAME TIME="1">
+            <TRANSLATION>0 0 0</TRANSLATION>
+            <ROTATION>0 0 0.173649 0.984805</ROTATION>
+        </KEYFRAME>
+        <KEYFRAME TIME="2">
+            <TRANSLATION>0 0 0</TRANSLATION>
+            <ROTATION>0 0 0 1</ROTATION>
+        </KEYFRAME>
+    </TRACK>
+</ANIMATION>
+
+<ANIMATION NAME="TurnRight.xaf" ENDCONTROL="repeat">
+    <TRACK BONE="BackLeft">
+        <KEYFRAME TIME="0">
+            <TRANSLATION>0 0 0</TRANSLATION>
+            <ROTATION>0 0 0 1</ROTATION>
+        </KEYFRAME>
+        <KEYFRAME TIME="1">
+            <TRANSLATION>0 0 0</TRANSLATION>
+            <ROTATION>0 0 0.173649 0.984805</ROTATION>
+        </KEYFRAME>
+        <KEYFRAME TIME="2">
+            <TRANSLATION>0 0 0</TRANSLATION>
+            <ROTATION>0 0 0 1</ROTATION>
+        </KEYFRAME>
+    </TRACK>
+    <TRACK BONE="BackRight">
+        <KEYFRAME TIME="0">
+            <TRANSLATION>0 0 0</TRANSLATION>
+            <ROTATION>0 0 0 1</ROTATION>
+        </KEYFRAME>
+        <KEYFRAME TIME="1">
+            <TRANSLATION>0 0 0</TRANSLATION>
+            <ROTATION>0 0 -0.173649 0.984805</ROTATION>
+        </KEYFRAME>
+        <KEYFRAME TIME="2">
+            <TRANSLATION>0 0 0</TRANSLATION>
+            <ROTATION>0 0 0 1</ROTATION>
+        </KEYFRAME>
+    </TRACK>
+    <TRACK BONE="FrontLeft">
+        <KEYFRAME TIME="0">
+            <TRANSLATION>0 0 0</TRANSLATION>
+            <ROTATION>0 0 0 1</ROTATION>
+        </KEYFRAME>
+        <KEYFRAME TIME="1">
+            <TRANSLATION>0 0 0</TRANSLATION>
+            <ROTATION>0 0 -0.173649 0.984805</ROTATION>
+        </KEYFRAME>
+        <KEYFRAME TIME="2">
+            <TRANSLATION>0 0 0</TRANSLATION>
+            <ROTATION>0 0 0 1</ROTATION>
+        </KEYFRAME>
+    </TRACK>
+    <TRACK BONE="FrontRight">
+        <KEYFRAME TIME="0">
+            <TRANSLATION>0 0 0</TRANSLATION>
+            <ROTATION>0 0 0 1</ROTATION>
+        </KEYFRAME>
+        <KEYFRAME TIME="1">
+            <TRANSLATION>0 0 0</TRANSLATION>
+            <ROTATION>0 0 -0.173649 0.984805</ROTATION>
+        </KEYFRAME>
+        <KEYFRAME TIME="2">
+            <TRANSLATION>0 0 0</TRANSLATION>
+            <ROTATION>0 0 0 1</ROTATION>
+        </KEYFRAME>
+    </TRACK>
+</ANIMATION>

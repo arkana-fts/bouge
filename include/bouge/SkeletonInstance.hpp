@@ -69,6 +69,9 @@ namespace bouge {
             bool operator==(iterator other) const;
             bool operator!=(iterator other) const;
             iterator& operator++();
+            iterator operator++(int);
+            iterator& operator--();
+            iterator operator--(int);
             BoneInstancePtr operator*();
             BoneInstance* operator->();
         private:
@@ -88,8 +91,11 @@ namespace bouge {
             bool operator==(const_iterator other) const;
             bool operator!=(const_iterator other) const;
             const_iterator& operator++();
-            BoneInstancePtrC operator*();
-            const BoneInstance* operator->();
+            const_iterator operator++(int);
+            const_iterator& operator--();
+            const_iterator operator--(int);
+            BoneInstancePtrC operator*() const;
+            const BoneInstance* operator->() const;
         private:
             friend class SkeletonInstance;
             const_iterator(const SkeletonInstance* me, CoreSkeleton::const_iterator iter);
@@ -107,6 +113,9 @@ namespace bouge {
             bool operator==(root_iterator other) const;
             bool operator!=(root_iterator other) const;
             root_iterator& operator++();
+            root_iterator operator++(int);
+            root_iterator& operator--();
+            root_iterator operator--(int);
             BoneInstancePtr operator*();
             BoneInstance* operator->();
         private:
@@ -126,8 +135,11 @@ namespace bouge {
             bool operator==(const_root_iterator other) const;
             bool operator!=(const_root_iterator other) const;
             const_root_iterator& operator++();
-            BoneInstancePtrC operator*();
-            const BoneInstance* operator->();
+            const_root_iterator operator++(int);
+            const_root_iterator& operator--();
+            const_root_iterator operator--(int);
+            BoneInstancePtrC operator*() const;
+            const BoneInstance* operator->() const;
         private:
             friend class SkeletonInstance;
             const_root_iterator(const SkeletonInstance* me, CoreSkeleton::const_root_iterator iter);

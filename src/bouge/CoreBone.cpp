@@ -220,6 +220,9 @@ namespace bouge
         : myIter(me)
     { }
 
+    CoreBone::iterator::iterator()
+    { }
+
     CoreBone::iterator::~iterator()
     { }
 
@@ -235,8 +238,22 @@ namespace bouge
 
     CoreBone::iterator& CoreBone::iterator::operator++()
     {
-        ++myIter;
-        return *this;
+        return ++myIter, *this;
+    }
+
+    CoreBone::iterator CoreBone::iterator::operator++(int)
+    {
+        return iterator(myIter++);
+    }
+
+    CoreBone::iterator& CoreBone::iterator::operator--()
+    {
+        return --myIter, *this;
+    }
+
+    CoreBone::iterator CoreBone::iterator::operator--(int)
+    {
+        return iterator(myIter--);
     }
 
     CoreBonePtr CoreBone::iterator::operator*()
@@ -263,6 +280,9 @@ namespace bouge
         : myIter(me)
     { }
 
+    CoreBone::const_iterator::const_iterator()
+    { }
+
     CoreBone::const_iterator::~const_iterator()
     { }
 
@@ -278,16 +298,30 @@ namespace bouge
 
     CoreBone::const_iterator& CoreBone::const_iterator::operator++()
     {
-        ++myIter;
-        return *this;
+        return ++myIter, *this;
     }
 
-    CoreBonePtrC CoreBone::const_iterator::operator*()
+    CoreBone::const_iterator CoreBone::const_iterator::operator++(int)
+    {
+        return const_iterator(myIter++);
+    }
+
+    CoreBone::const_iterator& CoreBone::const_iterator::operator--()
+    {
+        return --myIter, *this;
+    }
+
+    CoreBone::const_iterator CoreBone::const_iterator::operator--(int)
+    {
+        return const_iterator(myIter--);
+    }
+
+    CoreBonePtrC CoreBone::const_iterator::operator*() const
     {
         return myIter->second;
     }
 
-    const CoreBone* CoreBone::const_iterator::operator->()
+    const CoreBone* CoreBone::const_iterator::operator->() const
     {
         return myIter->second.operator->();
     }

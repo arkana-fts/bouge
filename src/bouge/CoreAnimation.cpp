@@ -108,6 +108,9 @@ namespace bouge {
         : myIter(me)
     { }
 
+    CoreAnimation::iterator::iterator()
+    { }
+
     CoreAnimation::iterator::~iterator()
     { }
 
@@ -123,14 +126,22 @@ namespace bouge {
 
     CoreAnimation::iterator& CoreAnimation::iterator::operator++()
     {
-        ++myIter;
-        return *this;
+        return ++myIter, *this;
+    }
+
+    CoreAnimation::iterator CoreAnimation::iterator::operator++(int)
+    {
+        return iterator(myIter++);
     }
 
     CoreAnimation::iterator& CoreAnimation::iterator::operator--()
     {
-        --myIter;
-        return *this;
+        return --myIter, *this;
+    }
+
+    CoreAnimation::iterator CoreAnimation::iterator::operator--(int)
+    {
+        return iterator(myIter--);
     }
 
     std::string CoreAnimation::iterator::bone() const
@@ -162,6 +173,9 @@ namespace bouge {
         : myIter(me)
     { }
 
+    CoreAnimation::const_iterator::const_iterator()
+    { }
+
     CoreAnimation::const_iterator::~const_iterator()
     { }
 
@@ -177,14 +191,22 @@ namespace bouge {
 
     CoreAnimation::const_iterator& CoreAnimation::const_iterator::operator++()
     {
-        ++myIter;
-        return *this;
+        return ++myIter, *this;
+    }
+
+    CoreAnimation::const_iterator CoreAnimation::const_iterator::operator++(int)
+    {
+        return const_iterator(myIter++);
     }
 
     CoreAnimation::const_iterator& CoreAnimation::const_iterator::operator--()
     {
-        --myIter;
-        return *this;
+        return --myIter, *this;
+    }
+
+    CoreAnimation::const_iterator CoreAnimation::const_iterator::operator--(int)
+    {
+        return const_iterator(myIter--);
     }
 
     std::string CoreAnimation::const_iterator::bone() const

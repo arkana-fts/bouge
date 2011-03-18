@@ -195,6 +195,9 @@ namespace bouge
         : myIter(me)
     { }
 
+    CoreMesh::iterator::iterator()
+    { }
+
     CoreMesh::iterator::~iterator()
     { }
 
@@ -210,8 +213,22 @@ namespace bouge
 
     CoreMesh::iterator& CoreMesh::iterator::operator++()
     {
-        ++myIter;
-        return *this;
+        return ++myIter, *this;
+    }
+
+    CoreMesh::iterator CoreMesh::iterator::operator++(int)
+    {
+        return iterator(myIter++);
+    }
+
+    CoreMesh::iterator& CoreMesh::iterator::operator--()
+    {
+        return --myIter, *this;
+    }
+
+    CoreMesh::iterator CoreMesh::iterator::operator--(int)
+    {
+        return iterator(myIter--);
     }
 
     CoreSubMeshPtr CoreMesh::iterator::operator*()
@@ -238,6 +255,9 @@ namespace bouge
         : myIter(me)
     { }
 
+    CoreMesh::const_iterator::const_iterator()
+    { }
+
     CoreMesh::const_iterator::~const_iterator()
     { }
 
@@ -253,16 +273,30 @@ namespace bouge
 
     CoreMesh::const_iterator& CoreMesh::const_iterator::operator++()
     {
-        ++myIter;
-        return *this;
+        return ++myIter, *this;
     }
 
-    CoreSubMeshPtrC CoreMesh::const_iterator::operator*()
+    CoreMesh::const_iterator CoreMesh::const_iterator::operator++(int)
+    {
+        return const_iterator(myIter++);
+    }
+
+    CoreMesh::const_iterator& CoreMesh::const_iterator::operator--()
+    {
+        return --myIter, *this;
+    }
+
+    CoreMesh::const_iterator CoreMesh::const_iterator::operator--(int)
+    {
+        return const_iterator(myIter--);
+    }
+
+    CoreSubMeshPtrC CoreMesh::const_iterator::operator*() const
     {
         return myIter->second;
     }
 
-    const CoreSubMesh* CoreMesh::const_iterator::operator->()
+    const CoreSubMesh* CoreMesh::const_iterator::operator->() const
     {
         return myIter->second.operator->();
     }

@@ -2,10 +2,10 @@
 BuildItems=@Variant(\x00\x00\x00\t\x00\x00\x00\x00\x01\x00\x00\x00\x0b\x00\x00\x00\x00\x01\x00\x00\x00\n\x00b\x00o\x00u\x00g\x00e)
 
 [CMake]
-BuildDirs[$e]=/windows/Xchange/roadrage/3d/bouge/build,/windows/Xchange/roadrage/3d/bouge/build-d
+BuildDirs[$e]=/windows/Xchange/projects/bouge/build,/windows/Xchange/projects/bouge/build-d,/windows/Xchange/projects/bouge/build-rdbg
 CMakeDir=/usr/share/cmake/Modules
 Current CMake Binary=file:///usr/bin/cmake
-CurrentBuildDir=file:///windows/Xchange/roadrage/3d/bouge/build-d
+CurrentBuildDir=file:///windows/Xchange/projects/bouge/build-d
 CurrentBuildType=Debug
 CurrentInstallDir=file:///usr/local
 Extra Arguments=
@@ -190,3 +190,6 @@ isExecutable=true
 
 [MakeBuilder]
 Number Of Jobs=1
+
+[Project]
+VersionControlSupport=kdevgit

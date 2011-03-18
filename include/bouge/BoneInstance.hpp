@@ -57,14 +57,17 @@ namespace bouge {
         /// \exception NotExistException
         BoneInstancePtrC child(const std::string& name, SkeletonInstancePtrC skel) const;
 
-        // TODO: Iterator.
         class BOUGE_API iterator {
         public:
+            iterator();
             ~iterator();
 
             bool operator==(iterator other) const;
             bool operator!=(iterator other) const;
             iterator& operator++();
+            iterator operator++(int);
+            iterator& operator--();
+            iterator operator--(int);
             BoneInstancePtr operator*();
             BoneInstance* operator->();
         private:
@@ -79,13 +82,17 @@ namespace bouge {
 
         class BOUGE_API const_iterator {
         public:
+            const_iterator();
             ~const_iterator();
 
             bool operator==(const_iterator other) const;
             bool operator!=(const_iterator other) const;
             const_iterator& operator++();
-            BoneInstancePtrC operator*();
-            const BoneInstance* operator->();
+            const_iterator operator++(int);
+            const_iterator& operator--();
+            const_iterator operator--(int);
+            BoneInstancePtrC operator*() const;
+            const BoneInstance* operator->() const;
         private:
             friend class BoneInstance;
             const_iterator(CoreBone::const_iterator me, SkeletonInstancePtrC skel);

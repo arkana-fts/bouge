@@ -65,6 +65,9 @@ namespace bouge
         : myIter(me)
     { }
 
+    CoreMaterialSet::iterator::iterator()
+    { }
+
     CoreMaterialSet::iterator::~iterator()
     { }
 
@@ -80,8 +83,22 @@ namespace bouge
 
     CoreMaterialSet::iterator& CoreMaterialSet::iterator::operator++()
     {
-        ++myIter;
-        return *this;
+        return ++myIter, *this;
+    }
+
+    CoreMaterialSet::iterator CoreMaterialSet::iterator::operator++(int)
+    {
+        return iterator(myIter++);
+    }
+
+    CoreMaterialSet::iterator& CoreMaterialSet::iterator::operator--()
+    {
+        return --myIter, *this;
+    }
+
+    CoreMaterialSet::iterator CoreMaterialSet::iterator::operator--(int)
+    {
+        return iterator(myIter--);
     }
 
     std::string CoreMaterialSet::iterator::meshname() const
@@ -113,6 +130,9 @@ namespace bouge
         : myIter(me)
     { }
 
+    CoreMaterialSet::const_iterator::const_iterator()
+    { }
+
     CoreMaterialSet::const_iterator::~const_iterator()
     { }
 
@@ -128,8 +148,22 @@ namespace bouge
 
     CoreMaterialSet::const_iterator& CoreMaterialSet::const_iterator::operator++()
     {
-        ++myIter;
-        return *this;
+        return ++myIter, *this;
+    }
+
+    CoreMaterialSet::const_iterator CoreMaterialSet::const_iterator::operator++(int)
+    {
+        return const_iterator(myIter++);
+    }
+
+    CoreMaterialSet::const_iterator& CoreMaterialSet::const_iterator::operator--()
+    {
+        return --myIter, *this;
+    }
+
+    CoreMaterialSet::const_iterator CoreMaterialSet::const_iterator::operator--(int)
+    {
+        return const_iterator(myIter--);
     }
 
     std::string CoreMaterialSet::const_iterator::meshname() const

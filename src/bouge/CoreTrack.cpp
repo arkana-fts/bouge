@@ -200,6 +200,9 @@ namespace bouge {
         : myIter(me)
     { }
 
+    CoreTrack::iterator::iterator()
+    { }
+
     CoreTrack::iterator::~iterator()
     { }
 
@@ -215,14 +218,22 @@ namespace bouge {
 
     CoreTrack::iterator& CoreTrack::iterator::operator++()
     {
-        ++myIter;
-        return *this;
+        return ++myIter, *this;
+    }
+
+    CoreTrack::iterator CoreTrack::iterator::operator++(int)
+    {
+        return iterator(myIter++);
     }
 
     CoreTrack::iterator& CoreTrack::iterator::operator--()
     {
-        --myIter;
-        return *this;
+        return --myIter, *this;
+    }
+
+    CoreTrack::iterator CoreTrack::iterator::operator--(int)
+    {
+        return iterator(myIter--);
     }
 
     float CoreTrack::iterator::time() const
@@ -290,6 +301,9 @@ namespace bouge {
         : myIter(me)
     { }
 
+    CoreTrack::const_iterator::const_iterator()
+    { }
+
     CoreTrack::const_iterator::~const_iterator()
     { }
 
@@ -305,14 +319,22 @@ namespace bouge {
 
     CoreTrack::const_iterator& CoreTrack::const_iterator::operator++()
     {
-        ++myIter;
-        return *this;
+        return ++myIter, *this;
+    }
+
+    CoreTrack::const_iterator CoreTrack::const_iterator::operator++(int)
+    {
+        return const_iterator(myIter++);
     }
 
     CoreTrack::const_iterator& CoreTrack::const_iterator::operator--()
     {
-        --myIter;
-        return *this;
+        return --myIter, *this;
+    }
+
+    CoreTrack::const_iterator CoreTrack::const_iterator::operator--(int)
+    {
+        return const_iterator(myIter--);
     }
 
     float CoreTrack::const_iterator::time() const

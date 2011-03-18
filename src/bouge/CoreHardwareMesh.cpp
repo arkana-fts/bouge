@@ -367,6 +367,9 @@ namespace bouge {
         : myIter(me)
     { }
 
+    CoreHardwareMesh::iterator::iterator()
+    { }
+
     CoreHardwareMesh::iterator::~iterator()
     { }
 
@@ -382,8 +385,22 @@ namespace bouge {
 
     CoreHardwareMesh::iterator& CoreHardwareMesh::iterator::operator++()
     {
-        myIter++;
-        return *this;
+        return ++myIter, *this;
+    }
+
+    CoreHardwareMesh::iterator CoreHardwareMesh::iterator::operator++(int)
+    {
+        return iterator(myIter++);
+    }
+
+    CoreHardwareMesh::iterator& CoreHardwareMesh::iterator::operator--()
+    {
+        return --myIter, *this;
+    }
+
+    CoreHardwareMesh::iterator CoreHardwareMesh::iterator::operator--(int)
+    {
+        return iterator(myIter--);
     }
 
     CoreHardwareSubMesh& CoreHardwareMesh::iterator::operator*()
@@ -410,6 +427,9 @@ namespace bouge {
         : myIter(me)
     { }
 
+    CoreHardwareMesh::const_iterator::const_iterator()
+    { }
+
     CoreHardwareMesh::const_iterator::~const_iterator()
     { }
 
@@ -425,16 +445,30 @@ namespace bouge {
 
     CoreHardwareMesh::const_iterator& CoreHardwareMesh::const_iterator::operator++()
     {
-        myIter++;
-        return *this;
+        return ++myIter, *this;
     }
 
-    const CoreHardwareSubMesh& CoreHardwareMesh::const_iterator::operator*()
+    CoreHardwareMesh::const_iterator CoreHardwareMesh::const_iterator::operator++(int)
+    {
+        return const_iterator(myIter++);
+    }
+
+    CoreHardwareMesh::const_iterator& CoreHardwareMesh::const_iterator::operator--()
+    {
+        return --myIter, *this;
+    }
+
+    CoreHardwareMesh::const_iterator CoreHardwareMesh::const_iterator::operator--(int)
+    {
+        return const_iterator(myIter--);
+    }
+
+    const CoreHardwareSubMesh& CoreHardwareMesh::const_iterator::operator*() const
     {
         return *myIter;
     }
 
-    const CoreHardwareSubMesh* CoreHardwareMesh::const_iterator::operator->()
+    const CoreHardwareSubMesh* CoreHardwareMesh::const_iterator::operator->() const
     {
         return myIter.operator->();
     }

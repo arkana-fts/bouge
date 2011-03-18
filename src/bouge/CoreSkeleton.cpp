@@ -130,6 +130,9 @@ namespace bouge {
         : myIter(me)
     { }
 
+    CoreSkeleton::iterator::iterator()
+    { }
+
     CoreSkeleton::iterator::~iterator()
     { }
 
@@ -145,8 +148,22 @@ namespace bouge {
 
     CoreSkeleton::iterator& CoreSkeleton::iterator::operator++()
     {
-        ++myIter;
-        return *this;
+        return ++myIter, *this;
+    }
+
+    CoreSkeleton::iterator CoreSkeleton::iterator::operator++(int)
+    {
+        return iterator(myIter++);
+    }
+
+    CoreSkeleton::iterator& CoreSkeleton::iterator::operator--()
+    {
+        return --myIter, *this;
+    }
+
+    CoreSkeleton::iterator CoreSkeleton::iterator::operator--(int)
+    {
+        return iterator(myIter--);
     }
 
     CoreBonePtr CoreSkeleton::iterator::operator*()
@@ -177,6 +194,9 @@ namespace bouge {
         : myIter(me)
     { }
 
+    CoreSkeleton::const_iterator::const_iterator()
+    { }
+
     CoreSkeleton::const_iterator::~const_iterator()
     { }
 
@@ -190,18 +210,33 @@ namespace bouge {
         return myIter != other.myIter;
     }
 
+
     CoreSkeleton::const_iterator& CoreSkeleton::const_iterator::operator++()
     {
-        ++myIter;
-        return *this;
+        return ++myIter, *this;
     }
 
-    CoreBonePtrC CoreSkeleton::const_iterator::operator*()
+    CoreSkeleton::const_iterator CoreSkeleton::const_iterator::operator++(int)
+    {
+        return const_iterator(myIter++);
+    }
+
+    CoreSkeleton::const_iterator& CoreSkeleton::const_iterator::operator--()
+    {
+        return --myIter, *this;
+    }
+
+    CoreSkeleton::const_iterator CoreSkeleton::const_iterator::operator--(int)
+    {
+        return const_iterator(myIter--);
+    }
+
+    CoreBonePtrC CoreSkeleton::const_iterator::operator*() const
     {
         return (*myIter);
     }
 
-    const CoreBone* CoreSkeleton::const_iterator::operator->()
+    const CoreBone* CoreSkeleton::const_iterator::operator->() const
     {
         return myIter->operator->();
     }
@@ -240,8 +275,22 @@ namespace bouge {
 
     CoreSkeleton::root_iterator& CoreSkeleton::root_iterator::operator++()
     {
-        ++myIter;
-        return *this;
+        return ++myIter, *this;
+    }
+
+    CoreSkeleton::root_iterator CoreSkeleton::root_iterator::operator++(int)
+    {
+        return root_iterator(me, myIter++);
+    }
+
+    CoreSkeleton::root_iterator& CoreSkeleton::root_iterator::operator--()
+    {
+        return --myIter, *this;
+    }
+
+    CoreSkeleton::root_iterator CoreSkeleton::root_iterator::operator--(int)
+    {
+        return root_iterator(me, myIter--);
     }
 
     CoreBonePtr CoreSkeleton::root_iterator::operator*()
@@ -288,16 +337,30 @@ namespace bouge {
 
     CoreSkeleton::const_root_iterator& CoreSkeleton::const_root_iterator::operator++()
     {
-        ++myIter;
-        return *this;
+        return ++myIter, *this;
     }
 
-    CoreBonePtrC CoreSkeleton::const_root_iterator::operator*()
+    CoreSkeleton::const_root_iterator CoreSkeleton::const_root_iterator::operator++(int)
+    {
+        return const_root_iterator(me, myIter++);
+    }
+
+    CoreSkeleton::const_root_iterator& CoreSkeleton::const_root_iterator::operator--()
+    {
+        return --myIter, *this;
+    }
+
+    CoreSkeleton::const_root_iterator CoreSkeleton::const_root_iterator::operator--(int)
+    {
+        return const_root_iterator(me, myIter--);
+    }
+
+    CoreBonePtrC CoreSkeleton::const_root_iterator::operator*() const
     {
         return me.m_allBones.at(*myIter);
     }
 
-    const CoreBone* CoreSkeleton::const_root_iterator::operator->()
+    const CoreBone* CoreSkeleton::const_root_iterator::operator->() const
     {
         return me.m_allBones.at(*myIter).operator->();
     }

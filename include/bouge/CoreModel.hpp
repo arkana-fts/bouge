@@ -71,11 +71,15 @@ namespace bouge {
 
         class BOUGE_API material_iterator {
         public:
+            material_iterator();
             ~material_iterator();
 
             bool operator==(material_iterator other) const;
             bool operator!=(material_iterator other) const;
             material_iterator& operator++();
+            material_iterator operator++(int);
+            material_iterator& operator--();
+            material_iterator operator--(int);
             CoreMaterialPtr operator*();
             CoreMaterial* operator->();
         private:
@@ -89,13 +93,17 @@ namespace bouge {
 
         class BOUGE_API const_material_iterator {
         public:
+            const_material_iterator();
             ~const_material_iterator();
 
             bool operator==(const_material_iterator other) const;
             bool operator!=(const_material_iterator other) const;
             const_material_iterator& operator++();
-            CoreMaterialPtrC operator*();
-            const CoreMaterial* operator->();
+            const_material_iterator operator++(int);
+            const_material_iterator& operator--();
+            const_material_iterator operator--(int);
+            CoreMaterialPtrC operator*() const;
+            const CoreMaterial* operator->() const;
         private:
             friend class CoreModel;
             const_material_iterator(MaterialMap::const_iterator me);
@@ -115,11 +123,15 @@ namespace bouge {
 
         class BOUGE_API materialset_iterator {
         public:
+            materialset_iterator();
             ~materialset_iterator();
 
             bool operator==(materialset_iterator other) const;
             bool operator!=(materialset_iterator other) const;
             materialset_iterator& operator++();
+            materialset_iterator operator++(int);
+            materialset_iterator& operator--();
+            materialset_iterator operator--(int);
             CoreMaterialSetPtr operator*();
             CoreMaterialSet* operator->();
         private:
@@ -133,13 +145,17 @@ namespace bouge {
 
         class BOUGE_API const_materialset_iterator {
         public:
+            const_materialset_iterator();
             ~const_materialset_iterator();
 
             bool operator==(const_materialset_iterator other) const;
             bool operator!=(const_materialset_iterator other) const;
             const_materialset_iterator& operator++();
-            CoreMaterialSetPtrC operator*();
-            const CoreMaterialSet* operator->();
+            const_materialset_iterator operator++(int);
+            const_materialset_iterator& operator--();
+            const_materialset_iterator operator--(int);
+            CoreMaterialSetPtrC operator*() const;
+            const CoreMaterialSet* operator->() const;
         private:
             friend class CoreModel;
             const_materialset_iterator(MaterialSetMap::const_iterator me);
@@ -192,8 +208,8 @@ namespace bouge {
             const_animation_iterator operator++(int);
             const_animation_iterator& operator--();
             const_animation_iterator operator--(int);
-            CoreAnimationPtrC operator*();
-            const CoreAnimation* operator->();
+            CoreAnimationPtrC operator*() const;
+            const CoreAnimation* operator->() const;
         private:
             friend class CoreModel;
             const_animation_iterator(AnimationMap::const_iterator me);

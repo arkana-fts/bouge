@@ -92,11 +92,15 @@ namespace bouge {
 
         class BOUGE_API iterator {
         public:
+            iterator();
             ~iterator();
 
             bool operator==(iterator other) const;
             bool operator!=(iterator other) const;
             iterator& operator++();
+            iterator operator++(int);
+            iterator& operator--();
+            iterator operator--(int);
             CoreBonePtr operator*();
             CoreBone* operator->();
         private:
@@ -110,13 +114,17 @@ namespace bouge {
 
         class BOUGE_API const_iterator {
         public:
+            const_iterator();
             ~const_iterator();
 
             bool operator==(const_iterator other) const;
             bool operator!=(const_iterator other) const;
             const_iterator& operator++();
-            CoreBonePtrC operator*();
-            const CoreBone* operator->();
+            const_iterator operator++(int);
+            const_iterator& operator--();
+            const_iterator operator--(int);
+            CoreBonePtrC operator*() const;
+            const CoreBone* operator->() const;
         private:
             friend class CoreBone;
             const_iterator(ChildrenMap::const_iterator me);

@@ -148,6 +148,9 @@ namespace bouge {
         : myIter(me)
     { }
 
+    CoreModel::material_iterator::material_iterator()
+    { }
+
     CoreModel::material_iterator::~material_iterator()
     { }
 
@@ -163,8 +166,22 @@ namespace bouge {
 
     CoreModel::material_iterator& CoreModel::material_iterator::operator++()
     {
-        ++myIter;
-        return *this;
+        return ++myIter, *this;
+    }
+
+    CoreModel::material_iterator CoreModel::material_iterator::operator++(int)
+    {
+        return material_iterator(myIter++);
+    }
+
+    CoreModel::material_iterator& CoreModel::material_iterator::operator--()
+    {
+        return --myIter, *this;
+    }
+
+    CoreModel::material_iterator CoreModel::material_iterator::operator--(int)
+    {
+        return material_iterator(myIter--);
     }
 
     CoreMaterialPtr CoreModel::material_iterator::operator*()
@@ -191,6 +208,9 @@ namespace bouge {
         : myIter(me)
     { }
 
+    CoreModel::const_material_iterator::const_material_iterator()
+    { }
+
     CoreModel::const_material_iterator::~const_material_iterator()
     { }
 
@@ -206,16 +226,30 @@ namespace bouge {
 
     CoreModel::const_material_iterator& CoreModel::const_material_iterator::operator++()
     {
-        ++myIter;
-        return *this;
+        return ++myIter, *this;
     }
 
-    CoreMaterialPtrC CoreModel::const_material_iterator::operator*()
+    CoreModel::const_material_iterator CoreModel::const_material_iterator::operator++(int)
+    {
+        return const_material_iterator(myIter++);
+    }
+
+    CoreModel::const_material_iterator& CoreModel::const_material_iterator::operator--()
+    {
+        return --myIter, *this;
+    }
+
+    CoreModel::const_material_iterator CoreModel::const_material_iterator::operator--(int)
+    {
+        return const_material_iterator(myIter--);
+    }
+
+    CoreMaterialPtrC CoreModel::const_material_iterator::operator*() const
     {
         return myIter->second;
     }
 
-    const CoreMaterial* CoreModel::const_material_iterator::operator->()
+    const CoreMaterial* CoreModel::const_material_iterator::operator->() const
     {
         return myIter->second.operator->();
     }
@@ -284,6 +318,9 @@ namespace bouge {
         : myIter(me)
     { }
 
+    CoreModel::materialset_iterator::materialset_iterator()
+    { }
+
     CoreModel::materialset_iterator::~materialset_iterator()
     { }
 
@@ -299,8 +336,22 @@ namespace bouge {
 
     CoreModel::materialset_iterator& CoreModel::materialset_iterator::operator++()
     {
-        ++myIter;
-        return *this;
+        return ++myIter, *this;
+    }
+
+    CoreModel::materialset_iterator CoreModel::materialset_iterator::operator++(int)
+    {
+        return materialset_iterator(myIter++);
+    }
+
+    CoreModel::materialset_iterator& CoreModel::materialset_iterator::operator--()
+    {
+        return --myIter, *this;
+    }
+
+    CoreModel::materialset_iterator CoreModel::materialset_iterator::operator--(int)
+    {
+        return materialset_iterator(myIter--);
     }
 
     CoreMaterialSetPtr CoreModel::materialset_iterator::operator*()
@@ -327,6 +378,9 @@ namespace bouge {
          : myIter(me)
     { }
 
+    CoreModel::const_materialset_iterator::const_materialset_iterator()
+    { }
+
     CoreModel::const_materialset_iterator::~const_materialset_iterator()
     { }
 
@@ -342,16 +396,30 @@ namespace bouge {
 
     CoreModel::const_materialset_iterator& CoreModel::const_materialset_iterator::operator++()
     {
-        ++myIter;
-        return *this;
+        return ++myIter, *this;
     }
 
-    CoreMaterialSetPtrC CoreModel::const_materialset_iterator::operator*()
+    CoreModel::const_materialset_iterator CoreModel::const_materialset_iterator::operator++(int)
+    {
+        return const_materialset_iterator(myIter++);
+    }
+
+    CoreModel::const_materialset_iterator& CoreModel::const_materialset_iterator::operator--()
+    {
+        return --myIter, *this;
+    }
+
+    CoreModel::const_materialset_iterator CoreModel::const_materialset_iterator::operator--(int)
+    {
+        return const_materialset_iterator(myIter--);
+    }
+
+    CoreMaterialSetPtrC CoreModel::const_materialset_iterator::operator*() const
     {
         return myIter->second;
     }
 
-    const CoreMaterialSet* CoreModel::const_materialset_iterator::operator->()
+    const CoreMaterialSet* CoreModel::const_materialset_iterator::operator->() const
     {
         return myIter->second.operator->();
     }
@@ -438,28 +506,22 @@ namespace bouge {
 
     CoreModel::animation_iterator& CoreModel::animation_iterator::operator++()
     {
-        myIter++;
-        return *this;
+        return ++myIter, *this;
     }
 
     CoreModel::animation_iterator CoreModel::animation_iterator::operator++(int)
     {
-        animation_iterator copy(*this);
-        myIter++;
-        return copy;
+        return animation_iterator(myIter++);
     }
 
     CoreModel::animation_iterator& CoreModel::animation_iterator::operator--()
     {
-        myIter--;
-        return *this;
+        return --myIter, *this;
     }
 
     CoreModel::animation_iterator CoreModel::animation_iterator::operator--(int)
     {
-        animation_iterator copy(*this);
-        myIter--;
-        return copy;
+        return animation_iterator(myIter--);
     }
 
     CoreAnimationPtr CoreModel::animation_iterator::operator*()
@@ -514,36 +576,30 @@ namespace bouge {
 
     CoreModel::const_animation_iterator& CoreModel::const_animation_iterator::operator++()
     {
-        myIter++;
-        return *this;
+        return ++myIter, *this;
     }
 
     CoreModel::const_animation_iterator CoreModel::const_animation_iterator::operator++(int)
     {
-        const_animation_iterator copy(*this);
-        myIter++;
-        return copy;
+        return const_animation_iterator(myIter++);
     }
 
     CoreModel::const_animation_iterator& CoreModel::const_animation_iterator::operator--()
     {
-        myIter--;
-        return *this;
+        return --myIter, *this;
     }
 
     CoreModel::const_animation_iterator CoreModel::const_animation_iterator::operator--(int)
     {
-        const_animation_iterator copy(*this);
-        myIter--;
-        return copy;
+        return const_animation_iterator(myIter--);
     }
 
-    CoreAnimationPtrC CoreModel::const_animation_iterator::operator*()
+    CoreAnimationPtrC CoreModel::const_animation_iterator::operator*() const
     {
         return myIter->second;
     }
 
-    const CoreAnimation* CoreModel::const_animation_iterator::operator->()
+    const CoreAnimation* CoreModel::const_animation_iterator::operator->() const
     {
         return myIter->second.operator->();
     }

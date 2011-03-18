@@ -97,11 +97,15 @@ namespace bouge {
 
         class BOUGE_API iterator {
         public:
+            iterator();
             ~iterator();
 
             bool operator==(iterator other) const;
             bool operator!=(iterator other) const;
             iterator& operator++();
+            iterator operator++(int);
+            iterator& operator--();
+            iterator operator--(int);
             CoreSubMeshPtr operator*();
             CoreSubMesh* operator->();
         private:
@@ -115,13 +119,17 @@ namespace bouge {
 
         class BOUGE_API const_iterator {
         public:
+            const_iterator();
             ~const_iterator();
 
             bool operator==(const_iterator other) const;
             bool operator!=(const_iterator other) const;
             const_iterator& operator++();
-            CoreSubMeshPtrC operator*();
-            const CoreSubMesh* operator->();
+            const_iterator operator++(int);
+            const_iterator& operator--();
+            const_iterator operator--(int);
+            CoreSubMeshPtrC operator*() const;
+            const CoreSubMesh* operator->() const;
         private:
             friend class CoreMesh;
             const_iterator(SubMeshMap::const_iterator me);

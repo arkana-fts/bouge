@@ -112,6 +112,9 @@ namespace bouge {
         : myIter(me)
     { }
 
+    Vertex::iterator::iterator()
+    { }
+
     Vertex::iterator::~iterator()
     { }
 
@@ -127,8 +130,22 @@ namespace bouge {
 
     Vertex::iterator& Vertex::iterator::operator++()
     {
-        ++myIter;
-        return *this;
+        return ++myIter, *this;
+    }
+
+    Vertex::iterator Vertex::iterator::operator++(int)
+    {
+        return iterator(myIter++);
+    }
+
+    Vertex::iterator& Vertex::iterator::operator--()
+    {
+        return --myIter, *this;
+    }
+
+    Vertex::iterator Vertex::iterator::operator--(int)
+    {
+        return iterator(myIter--);
     }
 
     std::string Vertex::iterator::name() const
@@ -155,6 +172,9 @@ namespace bouge {
         : myIter(me)
     { }
 
+    Vertex::const_iterator::const_iterator()
+    { }
+
     Vertex::const_iterator::~const_iterator()
     { }
 
@@ -170,8 +190,22 @@ namespace bouge {
 
     Vertex::const_iterator& Vertex::const_iterator::operator++()
     {
-        ++myIter;
-        return *this;
+        return ++myIter, *this;
+    }
+
+    Vertex::const_iterator Vertex::const_iterator::operator++(int)
+    {
+        return const_iterator(myIter++);
+    }
+
+    Vertex::const_iterator& Vertex::const_iterator::operator--()
+    {
+        return --myIter, *this;
+    }
+
+    Vertex::const_iterator Vertex::const_iterator::operator--(int)
+    {
+        return const_iterator(myIter--);
     }
 
     std::string Vertex::const_iterator::name() const

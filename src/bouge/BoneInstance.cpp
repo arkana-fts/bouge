@@ -97,6 +97,9 @@ namespace bouge {
         , mySkel(skel)
     { }
 
+    BoneInstance::iterator::iterator()
+    { }
+
     BoneInstance::iterator::~iterator()
     { }
 
@@ -112,8 +115,22 @@ namespace bouge {
 
     BoneInstance::iterator& BoneInstance::iterator::operator++()
     {
-        ++myIter;
-        return *this;
+        return ++myIter, *this;
+    }
+
+    BoneInstance::iterator BoneInstance::iterator::operator++(int)
+    {
+        return iterator(myIter++, mySkel);
+    }
+
+    BoneInstance::iterator& BoneInstance::iterator::operator--()
+    {
+        return --myIter, *this;
+    }
+
+    BoneInstance::iterator BoneInstance::iterator::operator--(int)
+    {
+        return iterator(myIter--, mySkel);
     }
 
     BoneInstancePtr BoneInstance::iterator::operator*()
@@ -141,6 +158,9 @@ namespace bouge {
         , mySkel(skel)
     { }
 
+    BoneInstance::const_iterator::const_iterator()
+    { }
+
     BoneInstance::const_iterator::~const_iterator()
     { }
 
@@ -156,16 +176,30 @@ namespace bouge {
 
     BoneInstance::const_iterator& BoneInstance::const_iterator::operator++()
     {
-        ++myIter;
-        return *this;
+        return ++myIter, *this;
     }
 
-    BoneInstancePtrC BoneInstance::const_iterator::operator*()
+    BoneInstance::const_iterator BoneInstance::const_iterator::operator++(int)
+    {
+        return const_iterator(myIter++, mySkel);
+    }
+
+    BoneInstance::const_iterator& BoneInstance::const_iterator::operator--()
+    {
+        return --myIter, *this;
+    }
+
+    BoneInstance::const_iterator BoneInstance::const_iterator::operator--(int)
+    {
+        return const_iterator(myIter--, mySkel);
+    }
+
+    BoneInstancePtrC BoneInstance::const_iterator::operator*() const
     {
         return mySkel->bone(myIter->id());
     }
 
-    const BoneInstance* BoneInstance::const_iterator::operator->()
+    const BoneInstance* BoneInstance::const_iterator::operator->() const
     {
         return mySkel->bone(myIter->id()).operator->();
     }

@@ -2,14 +2,14 @@
 # find doxygen
 if(MACOSX)
     # Add some path to search doxygen in more directories.
-    set(ADDITIONAL_PATHS 
-        /Developer/Applications/Doxygen.app/Contents/Resources 
-        /Developer/Applications/Doxygen.app/Contents/MacOS 
-        $ENV{HOME}/Applications/Doxygen.app/Contents/Resources 
-        $ENV{HOME}/Applications/Doxygen.app/Contents/MacOS 
-        $ENV{HOME}/Applications/Developer/Doxygen.app/Contents/Resources 
+    set(ADDITIONAL_PATHS
+        /Developer/Applications/Doxygen.app/Contents/Resources
+        /Developer/Applications/Doxygen.app/Contents/MacOS
+        $ENV{HOME}/Applications/Doxygen.app/Contents/Resources
+        $ENV{HOME}/Applications/Doxygen.app/Contents/MacOS
+        $ENV{HOME}/Applications/Developer/Doxygen.app/Contents/Resources
         $ENV{HOME}/Applications/Developer/Doxygen.app/Contents/MacOS)
- 
+
     set(CMAKE_PROGRAM_PATH ${CMAKE_PROGRAM_PATH} ${ADDITIONAL_PATHS})
 endif()
 find_package(Doxygen REQUIRED)
@@ -56,7 +56,7 @@ install(DIRECTORY ${DOXYGEN_OUTPUT_DIR}/html
         DESTINATION ${INSTALL_MISC_DIR}/doc
         COMPONENT doc)
 if(DOXYGEN_HHC_PROGRAM)
-    install(FILES ${DOXYGEN_OUTPUT_DIR}/sfml.chm
+    install(FILES ${DOXYGEN_OUTPUT_DIR}/bouge.chm
             DESTINATION ${INSTALL_MISC_DIR}/doc
             COMPONENT doc)
 endif()

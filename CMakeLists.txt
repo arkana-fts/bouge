@@ -1,5 +1,11 @@
 cmake_minimum_required(VERSION 2.8)
 
+message(STATUS "                 ")
+message(STATUS "=================")
+message(STATUS "CONFIGURING bouge")
+message(STATUS "=================")
+message(STATUS "                 ")
+
 # set a default build type if none was provided
 # this has to be done before the project() instruction!
 if(NOT CMAKE_BUILD_TYPE)
@@ -21,16 +27,28 @@ set(VERSION_PATCH 0)
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
 # add an option for choosing the build type (shared or static)
-set(BUILD_SHARED_LIBS FALSE CACHE BOOL "TRUE to build bouge as shared libraries, FALSE to build it as static libraries")
+if(NOT DEFINED BOUGE_BUILD_SHARED_LIBS)
+    set(BOUGE_BUILD_SHARED_LIBS FALSE)
+endif()
+set(BUILD_SHARED_LIBS ${BOUGE_BUILD_SHARED_LIBS} CACHE BOOL "TRUE to build bouge as shared libraries, FALSE to build it as static libraries")
 
 # add an option for building the examples
-set(BUILD_EXAMPLES TRUE CACHE BOOL "TRUE to build the bouge examples, FALSE to ignore them")
+if(NOT DEFINED BOUGE_BUILD_EXAMPLES)
+    set(BOUGE_BUILD_EXAMPLES TRUE)
+endif()
+set(BUILD_EXAMPLES ${BOUGE_BUILD_EXAMPLES} CACHE BOOL "TRUE to build the bouge examples, FALSE to ignore them")
 
 # add an option for building the API documentation
-set(BUILD_DOC FALSE CACHE BOOL "TRUE to generate the API documentation, FALSE to ignore it")
+if(NOT DEFINED BOUGE_BUILD_DOC)
+    set(BOUGE_BUILD_DOC FALSE)
+endif()
+set(BUILD_DOC ${BOUGE_BUILD_DOC} CACHE BOOL "TRUE to generate the API documentation, FALSE to ignore it")
 
 # add an option for choosing to statically link to the CRT
-set(BUILD_STATICCRT FALSE CACHE BOOL "TRUE to statically link against the C Runtime, FALSE to dynamically link agains the C Runtime")
+if(NOT DEFINED BOUGE_BUILD_STATICCRT)
+    set(BOUGE_BUILD_STATICCRT FALSE)
+endif()
+set(BUILD_STATICCRT ${BOUGE_BUILD_STATICCRT} CACHE BOOL "TRUE to statically link against the C Runtime, FALSE to dynamically link agains the C Runtime")
 
 # define BOUGE_STATIC if the build type is not set to 'shared'
 if(BUILD_SHARED_LIBS)

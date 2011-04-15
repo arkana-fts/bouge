@@ -7,6 +7,7 @@ TODO:
     * const accessors also for non-const iterators!
         -> Why did I want that!?
         -> Probably look at CoreModel::animation_iterator.
+    * const iterator constructor taking a non-const iterator!
     * All headers include the stl stuff they need!
     * Test all kinds of invalid data
     * Pass by value/by reference consistently: by value when copying, by ref when only reading.

@@ -604,11 +604,7 @@ namespace bougeExample
                 m_shaderToUse->uniformi(uDiffTex, 0);
             }
 
-#ifdef BOUGE_FACE_INDEX_UINT
-            glDrawElements(GL_TRIANGLES, submesh.faceCount() * m_hwmesh->indicesPerFace(), GL_UNSIGNED_INT, (const GLvoid*)(submesh.startIndex()*sizeof(BOUGE_FACE_INDEX_TYPE)));
-#else
-            glDrawElements(GL_TRIANGLES, submesh.faceCount() * m_hwmesh->indicesPerFace(), GL_UNSIGNED_SHORT, (const GLvoid*)(submesh.startIndex()*sizeof(BOUGE_FACE_INDEX_TYPE)));
-#endif
+            glDrawElements(GL_TRIANGLES, submesh.faceCount() * m_hwmesh->indicesPerFace(), BOUGE_FACE_INDEX_TYPE_GL, (const GLvoid*)(submesh.startIndex()*sizeof(BOUGE_FACE_INDEX_TYPE)));
         }
 
         gl_BindVertexArray(0);

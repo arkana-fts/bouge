@@ -36,11 +36,14 @@
 
 // Choose whatever you want here. The OpenGL docs say unsigned short might be faster..
 // Choose by adding "BOUGE_FACE_INDEX_UINT" or not to your preprocessor.
+// You can also define a different type by defining "BOUGE_FACE_INDEX_TYPE" before including this file.
 #ifndef BOUGE_FACE_INDEX_TYPE
     #ifdef BOUGE_FACE_INDEX_UINT
         #define BOUGE_FACE_INDEX_TYPE unsigned int
+        #define BOUGE_FACE_INDEX_TYPE_GL GL_UNSIGNED_INT
     #else
         #define BOUGE_FACE_INDEX_TYPE unsigned short
+        #define BOUGE_FACE_INDEX_TYPE_GL GL_UNSIGNED_SHORT
     #endif
 #endif
 

@@ -34,10 +34,28 @@ namespace bouge {
 
     Mixer::Mixer()
         : m_speed(1.0f)
+        , m_paused(false)
     { }
 
     Mixer::~Mixer()
     { }
+
+    Mixer& Mixer::pauseAll()
+    {
+        m_paused = true;
+        return *this;
+    }
+
+    Mixer& Mixer::resumeAll()
+    {
+        m_paused = false;
+        return *this;
+    }
+
+    bool Mixer::paused() const
+    {
+        return m_paused;
+    }
 
     float Mixer::speed() const
     {
@@ -54,6 +72,16 @@ namespace bouge {
 
     void Mixer::onSpeedChanged(float, float)
     { }
+
+    AnimationPtr DummyMixer::play(AnimationPtr anim)
+    {
+        return AnimationPtr(new Animation(CoreAnimationPtrC(new CoreAnimation("Dummy"))));
+    }
+
+    AnimationPtr DummyMixer::oneshot(AnimationPtr anim)
+    {
+        return AnimationPtr(new Animation(CoreAnimationPtrC(new CoreAnimation("Dummy"))));
+    }
 
     DefaultMixer::DefaultMixer(SkeletonInstancePtr skel)
         : m_skel(skel)
@@ -102,8 +130,58 @@ namespace bouge {
         return *this;
     }
 
+    DefaultMixer& DefaultMixer::pause(const std::string& animName)
+    {
+        for(std::set<AnimationPtr>::iterator i = m_cyclingAnims.begin() ; i != m_cyclingAnims.end() ; ++i) {
+            if((*i)->name() == animName) {
+                (*i)->pause();
+                break;
+            }
+        }
+        for(std::list<AnimationPtr>::iterator i = m_oneshotAnims.begin() ; i != m_oneshotAnims.end() ; ++i) {
+            if((*i)->name() == animName) {
+                (*i)->pause();
+                break;
+            }
+        }
+        return *this;
+    }
+
+    DefaultMixer& DefaultMixer::resume(const std::string& animName)
+    {
+        for(std::set<AnimationPtr>::iterator i = m_cyclingAnims.begin() ; i != m_cyclingAnims.end() ; ++i) {
+            if((*i)->name() == animName) {
+                (*i)->resume();
+                break;
+            }
+        }
+        for(std::list<AnimationPtr>::iterator i = m_oneshotAnims.begin() ; i != m_oneshotAnims.end() ; ++i) {
+            if((*i)->name() == animName) {
+                (*i)->resume();
+                break;
+            }
+        }
+        return *this;
+    }
+
+    bool DefaultMixer::paused(const std::string& animName) const
+    {
+        for(std::set<AnimationPtr>::const_iterator i = m_cyclingAnims.begin() ; i != m_cyclingAnims.end() ; ++i) {
+            if((*i)->name() == animName) {
+                return (*i)->paused();
+            }
+        }
+        for(std::list<AnimationPtr>::const_iterator i = m_oneshotAnims.begin() ; i != m_oneshotAnims.end() ; ++i) {
+            if((*i)->name() == animName) {
+                return (*i)->paused();
+            }
+        }
+        return false;
+    }
+
     DefaultMixer& DefaultMixer::pauseAll()
     {
+        Mixer::pauseAll();
         for(std::set<AnimationPtr>::iterator i = m_cyclingAnims.begin() ; i != m_cyclingAnims.end() ; ++i) {
             (*i)->pause();
         }
@@ -115,6 +193,7 @@ namespace bouge {
 
     DefaultMixer& DefaultMixer::resumeAll()
     {
+        Mixer::resumeAll();
         for(std::set<AnimationPtr>::iterator i = m_cyclingAnims.begin() ; i != m_cyclingAnims.end() ; ++i) {
             (*i)->resume();
         }
@@ -134,6 +213,20 @@ namespace bouge {
             this->stop(*i, fadeOutTime);
         }
         return *this;
+    }
+
+    float DefaultMixer::speed(const std::string& animName) const
+    {
+        for(std::set<AnimationPtr>::const_iterator i = m_cyclingAnims.begin() ; i != m_cyclingAnims.end() ; ++i) {
+            if((*i)->name() == animName)
+                return (*i)->speed();
+        }
+        for(std::list<AnimationPtr>::const_iterator i = m_oneshotAnims.begin() ; i != m_oneshotAnims.end() ; ++i) {
+            if((*i)->name() == animName)
+                return (*i)->speed();
+        }
+
+        return 1.0f;
     }
 
     DefaultMixer& DefaultMixer::speed(const std::string& animName, float speed)

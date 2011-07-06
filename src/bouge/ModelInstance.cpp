@@ -34,14 +34,13 @@ namespace bouge {
 
     ModelInstance::ModelInstance(CoreModelPtrC coremdl)
         : m_coremdl(coremdl)
-        , m_skel(new SkeletonInstance(coremdl->skeleton()))
+        , m_skel(coremdl->skeleton() ? new SkeletonInstance(coremdl->skeleton()) : 0)
+        , m_mixer(m_skel ? reinterpret_cast<Mixer*>(new DefaultMixer(m_skel)) : reinterpret_cast<Mixer*>(new DummyMixer()))
     {
         // Select the first material set if there are some.
         if(m_coremdl->begin_materialset() != m_coremdl->end_materialset()) {
             this->selectMatSet(m_coremdl->begin_materialset()->name());
         }
-
-        m_mixer = MixerPtr(new DefaultMixer(m_skel));
     }
 
     ModelInstance::~ModelInstance()
@@ -132,10 +131,44 @@ namespace bouge {
         return *this;
     }
 
+    ModelInstance& ModelInstance::pause(const std::string anim)
+    {
+        m_mixer->pause(anim);
+        return *this;
+    }
+
+    ModelInstance& ModelInstance::resume(const std::string anim)
+    {
+        m_mixer->resume(anim);
+        return *this;
+    }
+
+    bool ModelInstance::paused(const std::string anim) const
+    {
+        return m_mixer->paused(anim);
+    }
+
     ModelInstance& ModelInstance::stopAll(float fadeOutTime)
     {
         m_mixer->stopAll(fadeOutTime);
         return *this;
+    }
+
+    ModelInstance& ModelInstance::pauseAll()
+    {
+        m_mixer->pauseAll();
+        return *this;
+    }
+
+    ModelInstance& ModelInstance::resumeAll()
+    {
+        m_mixer->resumeAll();
+        return *this;
+    }
+
+    bool ModelInstance::paused() const
+    {
+        return m_mixer->paused();
     }
 
     float ModelInstance::speed() const
@@ -147,6 +180,11 @@ namespace bouge {
     {
         m_mixer->speed(s);
         return *this;
+    }
+
+    float ModelInstance::speed(const std::string anim) const
+    {
+        return m_mixer->speed(anim);
     }
 
     ModelInstance& ModelInstance::speed(const std::string anim, float s)

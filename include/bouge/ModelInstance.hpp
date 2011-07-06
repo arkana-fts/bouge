@@ -61,10 +61,18 @@ namespace bouge {
         AnimationPtr playOneShot(const std::string anim, float speed = 1.0f, float fadeInTime = 0.0f, float fadeOutTime = 0.0f, TimeFunction* control = 0);
         ModelInstance& stop(const std::string anim, float fadeOutTime = 0.3f);
         ModelInstance& stop(AnimationPtr anim, float fadeOutTime = 0.3f);
+        ModelInstance& pause(const std::string anim);
+        ModelInstance& resume(const std::string anim);
+        bool paused(const std::string anim) const;
+
         ModelInstance& stopAll(float fadeOutTime = 0.3f);
+        ModelInstance& pauseAll();
+        ModelInstance& resumeAll();
+        bool paused() const;
 
         float speed() const;
         ModelInstance& speed(float s);
+        float speed(const std::string anim) const;
         ModelInstance& speed(const std::string anim, float s);
 
         ModelInstance& attachAnimation(CoreAnimationPtrC anim);

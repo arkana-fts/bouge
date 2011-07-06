@@ -26,15 +26,9 @@
 
 #include <bouge/Config.hpp>
 #include <bouge/UserData.hpp>
+#include <bouge/MathFwd.hpp>
 
 namespace bouge {
-
-    class Base4x4Matrix;
-    class AffineMatrix;
-    class General4x4Matrix;
-    class Quaternion;
-    class Vector;
-    class TimeFunction;
 
     class BoneInstance;
     typedef bouge::shared_ptr<BoneInstance>::type BoneInstancePtr;

@@ -21,33 +21,30 @@
 // 3. This notice may not be removed or altered from any source distribution.
 //
 ////////////////////////////////////////////////////////////
-#ifndef BOUGE_HPP
-#define BOUGE_HPP
+#ifndef BOUGE_MATH_FWD_HPP
+#define BOUGE_MATH_FWD_HPP
 
-#include <bouge/Config.hpp>
+#include <bouge/Math/Util.hpp>
 
-#include <bouge/Math.hpp>
+namespace bouge {
 
-#include <bouge/Animation.hpp>
-#include <bouge/BoneInstance.hpp>
-#include <bouge/CoreAnimation.hpp>
-#include <bouge/CoreBone.hpp>
-#include <bouge/CoreHardwareMesh.hpp>
-#include <bouge/CoreKeyframe.hpp>
-#include <bouge/CoreMaterial.hpp>
-#include <bouge/CoreMaterialSet.hpp>
-#include <bouge/CoreMesh.hpp>
-#include <bouge/CoreModel.hpp>
-#include <bouge/CoreSkeleton.hpp>
-#include <bouge/CoreTrack.hpp>
-#include <bouge/Exception.hpp>
-#include <bouge/Face.hpp>
-#include <bouge/Mixer.hpp>
-#include <bouge/ModelInstance.hpp>
-#include <bouge/SkeletonInstance.hpp>
-#include <bouge/StaticModelInstance.hpp>
-#include <bouge/UserData.hpp>
-#include <bouge/Util.hpp>
-#include <bouge/Vertex.hpp>
+    class Vector;
 
-#endif // BOUGE_HPP
+    class Quaternion;
+
+    class Base4x4Matrix;
+    class AffineMatrix;
+    class General4x4Matrix;
+
+    class TimeFunction;
+    class ConstantTF;
+    class CycleTF;
+    class FadeInTF;
+    class FadeOutTF;
+    class HoldTF;
+    class LinearTF;
+    class RepeatTF;
+
+} // namespace bouge
+
+#endif // BOUGE_MATH_FWD_HPP

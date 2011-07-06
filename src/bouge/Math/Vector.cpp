@@ -24,7 +24,7 @@ Vector::Vector()
     m_v[3] = 1.0f;
 }
 
-Vector::Vector(float in_v[3])
+Vector::Vector(const float in_v[3])
     : m_v(4)
 {
     m_v[0] = in_v[0];

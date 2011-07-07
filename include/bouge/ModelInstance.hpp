@@ -90,7 +90,6 @@ namespace bouge {
 //         ModelInstance& attachMesh(mesh);
 //         ModelInstance& detachMesh();
 
-    protected:
         CoreAnimationPtrC findAnimToUse(const std::string& name) const;
 
     private:

@@ -196,6 +196,9 @@ public:
     /// \return A normalized copy of this vector. It has unit length.
     Vector normalized() const;
 
+    /// \return A copy of this vector with all negative entries turned positive.
+    Vector abs() const;
+
     /// "Cleans up" the vector by rounding unreasonably small values.
     /// Specifically, if the vector is near zero, sets it to exactly zero.
     /// \return a reference to *this

@@ -262,6 +262,11 @@ Vector Vector::normalized() const
     return copy.normalize();
 }
 
+Vector Vector::abs() const
+{
+    return Vector(std::abs(this->x()), std::abs(this->y()), std::abs(this->z()), std::abs((*this)[3]));
+}
+
 Vector& Vector::cleanup()
 {
     if(nearZero(fract(this->x())))

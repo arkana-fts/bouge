@@ -38,7 +38,7 @@ namespace bouge {
     class BOUGE_API Animation
     {
     public:
-        Animation(CoreAnimationPtrC core, float speed, TimeFunction* control = 0, TimeFunction* weight = 0);
+        Animation(CoreAnimationPtrC core, float speed = 1.0f, TimeFunction* control = 0, TimeFunction* weight = 0);
         virtual ~Animation();
 
         BOUGE_USER_DATA;

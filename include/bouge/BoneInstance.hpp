@@ -138,6 +138,7 @@ namespace bouge {
         // Helper cache variables.
         Vector m_absoluteRootPos;
         Quaternion m_absoluteBoneRot;
+        Vector m_absoluteBoneScale;
         AffineMatrix m_transformationMatrix;
     };
 

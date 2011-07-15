@@ -41,8 +41,12 @@ if "bpy" in locals():
 
 import bpy
 from bpy.props import *
-from io_utils import ExportHelper, ImportHelper
-
+try:
+    # 2.58
+    from bpy_extras.io_utils import ExportHelper, ImportHelper
+except ImportError:
+    # 2.56
+    from io_utils import ExportHelper, ImportHelper
 
 #class ImportBouge(bpy.types.Operator, ImportHelper):
 #    pass
@@ -86,9 +90,9 @@ class ExportBouge(bpy.types.Operator, ExportHelper):
     # to the class instance from the operator settings before calling.
 
     # context group
-    use_selection = BoolProperty(name="Selection Only", description="Export selected objects only", default=True)
-    use_all_scenes = BoolProperty(name="All Scenes", description="", default=False)
-    use_animation = BoolProperty(name="Animation", description="", default=False)
+    use_selection = BoolProperty(name="Selection Only", description="Export selected objects only", default=False)
+    #use_all_scenes = BoolProperty(name="All Scenes", description="", default=False)
+    #use_animation = BoolProperty(name="Animation", description="", default=False)
 
     # object group
     use_apply_modifiers = BoolProperty(name="Apply Modifiers", description="Apply modifiers (preview resolution)", default=True)

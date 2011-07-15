@@ -34,6 +34,7 @@ namespace bouge {
         , m_transl(/*core->relativeRootPosition()*/)
         , m_rotation(/*core->relativeBoneRotation()*/)
         , m_bDirty(true)
+        , m_absoluteBoneScale(1.0f, 1.0f, 1.0f)
     { }
 
     BoneInstance::~BoneInstance()
@@ -236,7 +237,6 @@ namespace bouge {
         //   -> The parent's rotation,
         //   -> The rotation of the bone in rest pose,
         //   -> The animated bone rotation, relative to its rest pose.
-//         m_absoluteBoneRot = parent->m_absoluteBoneRot * this->rot();
         m_absoluteBoneRot = parent->m_absoluteBoneRot * this->core()->relativeBoneRotation() * this->rot();
 
         // Similar situation for the root position:
@@ -245,11 +245,15 @@ namespace bouge {
         //
         // The latter is affected by:
         //    -> The position in rest pose,
-        //    -> The current animated position, relative to the rest pose,
+        //    -> The current animated position, relative to the rest pose (),
         //    -> The parent's rotation first,
         //    -> The parent's scale then.
-//         m_absoluteRootPos = parent->m_absoluteRootPos + parent->m_scale * parent->m_absoluteBoneRot.rotate(this->trans());
-        m_absoluteRootPos = parent->m_absoluteRootPos + parent->m_scale * parent->m_absoluteBoneRot.rotate(this->core()->relativeRootPosition() + this->trans());
+        m_absoluteRootPos = parent->m_absoluteRootPos + parent->m_absoluteBoneScale * parent->m_absoluteBoneRot.rotate(this->core()->relativeRootPosition() + this->core()->relativeBoneRotation().rotate(this->trans()));
+
+        m_absoluteBoneScale = Vector(1.0f, 1.0f, 1.0f) + this->core()->absoluteBoneRotation().rotate(this->scale() - Vector(1.0f, 1.0f, 1.0f)).abs();
+
+        // This would scale all children too (inherit scale)
+//         m_absoluteBoneScale *= parent->m_absoluteBoneScale;
 
         return this->recalcMatrixCache();
     }
@@ -258,8 +262,18 @@ namespace bouge {
     {
         // Just use the bone's current state when there is no parent.
         // i.e. absolute state == relative state
-        m_absoluteRootPos = this->core()->relativeRootPosition() + this->trans();
-        m_absoluteBoneRot = this->core()->relativeBoneRotation() * this->rot();
+
+        // Note that we got to rotate the translation factor, as it's relative
+        // to the bone's local coordinate system.
+        m_absoluteRootPos = this->core()->absoluteRootPosition() + this->core()->absoluteBoneRotation().rotate(this->trans());
+        m_absoluteBoneRot = this->core()->absoluteBoneRotation() * this->rot();
+
+        // Note that we have to "shift" the scale into "vector space" because in
+        // "scale space", (1,1,1) means nothing, while in vector space it is
+        // (0,0,0) which means nothing.
+        // After having transformed the scale (in vector space), we need to get
+        // it back into scale space.
+        m_absoluteBoneScale = Vector(1.0f, 1.0f, 1.0f) + this->core()->absoluteBoneRotation().rotate(this->scale() - Vector(1.0f, 1.0f, 1.0f)).abs();
 
         return this->recalcMatrixCache();
     }
@@ -267,7 +281,7 @@ namespace bouge {
     BoneInstance& BoneInstance::recalcMatrixCache()
     {
         // No one-liner in order to save temporaries
-        m_transformationMatrix.setTransformation(m_absoluteRootPos, this->scale(), m_absoluteBoneRot);
+        m_transformationMatrix.setTransformation(m_absoluteRootPos, m_absoluteBoneScale, m_absoluteBoneRot);
         m_transformationMatrix *= this->core()->modelSpaceToBoneSpaceMatrix();
         m_bDirty = false;
         return *this;

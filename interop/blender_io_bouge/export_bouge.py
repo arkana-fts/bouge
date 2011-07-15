@@ -69,7 +69,14 @@ def save_mesh(filepath, objects, scene,
 
         ob_mat = obj.matrix_world
 
-        me = obj.create_mesh(scene, not use_apply_modifiers, 'PREVIEW')
+        try:
+            # 2.58
+            createmesh = obj.to_mesh
+        except AttributeError:
+            # 2.56
+            createmesh = obj.create_mesh
+
+        me = createmesh(scene, use_apply_modifiers, 'PREVIEW')
         me.transform(preprocess_matrix * ob_mat)
 
         # We could split the object into submeshes by-material.
@@ -134,25 +141,27 @@ def __rootBone(bone):
         return __rootBone(bone.parent)
 
 def make_BougeBone(bone, preprocess_matrix):
-    # TODO:
-    #   * use_inherit_rotation? -> N/A here, but in animation!
-    #   * use_inherit_scale? -> N/A here, but in animation!
-
+    # TODO: test if that preprocess_matrix actually works.
     if bone.parent:
         relativePos = mathutils.Vector((0, bone.parent.length, 0))
 
         if not bone.use_connect:
             relativePos += bone.head
     else:
-        relativePos = bone.head
+        relativePos = bone.head * preprocess_matrix
 
     relativeRot = bone.matrix.to_quaternion()
 
     # We only need to rotate root bones by that, all others will follow!
     if not bone.parent:
-        pass
-        # It doesn't seem to work right now yet... this method always throws.
-        #relativeRot.rotate(preprocess_matrix)
+        try:
+            # Works since 2.58 (and 2.57?)
+            relativeRot.rotate(preprocess_matrix)
+        except TypeError:
+            # Workaround for 2.56
+            relativeRotM = relativeRot.to_matrix()
+            relativeRotM.rotate(preprocess_matrix)
+            relativeRot = relativeRotM.to_quaternion()
 
     return common.BougeBone(bone.name, bone.length, relativePos, relativeRot)
 
@@ -186,10 +195,10 @@ def save_armature(filepath, arm,
     for bone in arm.data.bones.values():
         __makeAndAttachParentRecursive(bone, allbones, rootbones, preprocess_matrix)
 
-    print("all:")
-    print(allbones)
-    print("roots:")
-    print(rootbones)
+    #print("all:")
+    #print(allbones)
+    #print("roots:")
+    #print(rootbones)
 
     skel = common.BougeSkel(os.path.splitext(os.path.basename(filepath))[0])
 
@@ -202,8 +211,8 @@ def save_armature(filepath, arm,
     skel.writeXML(file)
     file.close()
 
-def __col2str(col):
-    return '{:g} {:g} {:g} {:g}'.format(col.r, col.g, col.b, 1)
+def __col2str(col, alpha = None):
+    return '{:g} {:g} {:g} {:g}'.format(col.r, col.g, col.b, alpha or 1)
 
 def save_materials(filepath, mats):
     file = open(filepath, "w", encoding="utf8", newline="\n")
@@ -218,9 +227,12 @@ def save_materials(filepath, mats):
         sc = mat.specular_color
         di = mat.diffuse_intensity
         si = mat.specular_intensity
-        bmat.setprop('diffuse', __col2str(mathutils.Color((dc.r * di, dc.g * di, dc.b * di))))
-        bmat.setprop('specular', __col2str(mathutils.Color((sc.r * si, sc.g * si, sc.b * si))))
-        bmat.setprop('shininess', str(mat.specular_hardness))
+        #si = mat.specular_hardness
+        bmat.setprop('uMaterialAmbient', __col2str(mathutils.Color((0.2, 0.2, 0.2))))
+        bmat.setprop('uMaterialDiffuse', __col2str(mathutils.Color((dc.r * di, dc.g * di, dc.b * di))))
+        #bmat.setprop('specular', __col2str(mathutils.Color((sc.r * si, sc.g * si, sc.b * si))))
+        #bmat.setprop('shininess', str(mat.specular_hardness))
+        bmat.setprop('uMaterialSpecular', __col2str(mathutils.Color((sc.r * si, sc.g * si, sc.b * si)), mat.specular_hardness))
 
         # Texture maps
         for tex, i in zip(mat.texture_slots.values(), range(len(mat.texture_slots))):
@@ -233,16 +245,21 @@ def save_materials(filepath, mats):
                 print("Warning: skipping texture {} because it doesn't use UV texture coordinates!".format(tex.name))
                 continue
 
+            # Note that Arkana-FTS only supports png images!
+            # I anticipate keeping the correct file path won't do. Some users
+            # will pack the texture with absolute path and some with relative.
+            #   - Relative, it's all fine, keep the path.
+            #   - Absolute, just use the filename and put it in a 'textures' subdir.
             img = tex.texture.image
-            bmat.setprop('map' + (str(i) if i else ''),
-                         img.filepath if not img.filepath[:2] == "//" else img.filepath[2:])
+            imgfile = img.filepath[2:] if img.filepath[:2] == "//" else os.path.join('textures', os.path.basename(img.filepath))
+            imgfile_png = os.path.join(os.path.dirname(imgfile), os.path.splitext(os.path.basename(imgfile))[0] + '.png')
+            bmat.setprop('uTexture' + (str(i) if i else ''), imgfile_png)
 
-        #img = tex.texture.image
-        #img.name
-        #img.filepath
-        #img.filepath_raw
-        #img.source == 'FILE'
-        #img.packed_file ? None if not packed
+            # And now save the packed (or even just loaded?) image to disk.
+            old_filepath = img.filepath
+            img.filepath = os.path.join(os.path.dirname(filepath), imgfile_png)
+            img.save()
+            img.filepath = old_filepath
 
         bmat.writeXML(file)
 
@@ -276,6 +293,9 @@ def save_matset(filepath, mesh_material_assossiations, materials):
     file.close()
 
 def save_actions(filepath, acts, armatures):
+    if(len(acts) == 0):
+        return
+
     file = open(filepath, "w", encoding="utf8", newline="\n")
     file.write('<?xml version="1.0" encoding="UTF-8"?>\n')
     file.write('<!-- Automatically exported from Blender v{} using the bouge exporter by Lucas Beyer -->\n'.format(bpy.app.version_string))
@@ -297,10 +317,12 @@ def save_actions(filepath, acts, armatures):
             # (that is, in EDIT MODE.)
             # Note: I found no connection between actions and armatures in blender!
             #       So just look into each one there is.
-            boneBaseTrafo = mathutils.Matrix()
+            boneToWorld = mathutils.Matrix()
+            boneToArmature = mathutils.Matrix()
             for armature in armatures:
                 if track.name in armature.bones:
-                    boneBaseTrafo = armature.bones[track.name].matrix
+                    boneToWorld = armature.bones[track.name].matrix
+                    boneToArmature = armature.bones[track.name].matrix_local
 
             # For now, we sample each track at every single second within the
             # interval.
@@ -308,6 +330,8 @@ def save_actions(filepath, acts, armatures):
             # look at the single keyframes. True, but that's much more difficult :)
             # I could mark it as a TODO of low priority..
             for t in range(int(action.frame_range[0]), int(action.frame_range[1]) + 1):
+
+                # TODO: support bone.use_inherit_rotation == False
                 def getQuat(group, t):
                     q = None
                     for fcurve in group.channels.values():
@@ -315,8 +339,10 @@ def save_actions(filepath, acts, armatures):
                         if fcurve.data_path[-19:] == "rotation_quaternion":
                             q = mathutils.Quaternion() if not q else q
                             q[fcurve.array_index] = fcurve.evaluate(t)
-                    if q:
-                        q.rotate(boneBaseTrafo)
+                    # Bouge stores the rotations relative to the bone itself,
+                    # independent of the parents. Blender does the same, thus
+                    # we can just use them without any transformation.
+                    # Tested in 2.56 and 2.58
                     return q
 
                 def getLoc(group, t):
@@ -325,27 +351,23 @@ def save_actions(filepath, acts, armatures):
                         if fcurve.data_path[-8:] == "location":
                             l = mathutils.Vector() if not l else l
                             l[fcurve.array_index] = fcurve.evaluate(t)
-                    if l:
-                        # TODO: should that be it or should it be .to_translation,
-                        #       which is NOT available as it's only a 3x3 matrix.
-                        # Boils down to: let this be here or not??
-                        l *= boneBaseTrafo
+                    # Bouge stores the translations relative to the bone's local
+                    # coordinate system (to the bone itself). Blender does the
+                    # same, thus we can just use them witout any transformation.
+                    # Tested in 2.56 and 2.58
                     return l
 
+                # TODO: support bone.use_inherit_scale == True
                 def getScale(group, t):
                     s = None
                     for fcurve in group.channels.values():
                         if fcurve.data_path[-5:] == "scale":
                             s = mathutils.Vector() if not s else s
                             s[fcurve.array_index] = fcurve.evaluate(t)
-                    if s:
-                        # Tricky, as for scaling (1,1,1) is the zero that
-                        # means "no scale", we got to transform that to the
-                        # vector "zero" (0,0,0) in order to transform it correctly.
-                        # Then, rotate it and transform it back.
-                        s -= mathutils.Vector((1,1,1))
-                        s *= boneBaseTrafo
-                        s += mathutils.Vector((1,1,1))
+                    # Bouge (finally) stores the scalings relative to the bone's
+                    # local coordinate system (i.e. to the bone itself). Blender
+                    # does the same, thus again we can just use the data.
+                    # Tested in 2.56 and 2.58
                     return s
 
                 q = getQuat(track, t)
@@ -355,7 +377,7 @@ def save_actions(filepath, acts, armatures):
                 if not q and not l and not s:
                     continue
 
-                bkf = common.BougeKeyframe(t)
+                bkf = common.BougeKeyframe(float(t) / float(bpy.context.scene.render.fps))
                 if q:
                     bkf.setRot(q)
                 if l:
@@ -366,12 +388,7 @@ def save_actions(filepath, acts, armatures):
 
             banim.addTrack(btrack)
 
-        #for track in action.fcurves.values():
-            #btrack = common.BougeTrack()
-
         banim.writeXML(file)
-
-    print(acts)
 
     file.close()
 
@@ -417,18 +434,27 @@ def save(operator, context, filepath="",
             bpy.ops.object.select_all()
 
         if use_rotate_x90:
+            print("With 90d rotation around X")
             preprocess_matrix = mathutils.Matrix.Rotation(-math.pi / 2.0, 4, 'X')
         else:
+            print("Without 90d rotation around X")
             preprocess_matrix = mathutils.Matrix()
 
-        print(preprocess_matrix)
-        print(type(preprocess_matrix))
-        print(preprocess_matrix)
+        #print(preprocess_matrix)
+        #print(type(preprocess_matrix))
         armatures, materials, mesh_material_assossiations = save_mesh(filepath + ".bxmesh", objects, context.scene, preprocess_matrix, use_apply_modifiers, use_normalize_influences)
 
-        fixedname = filepath + ".bxskel" if len(armatures) == 1 else None
+        fixedname = filepath + ".bxskel" if len(armatures) <= 1 else None
         for arm in armatures.values():
-            save_armature(fixedname or filepath + "_" + arm.name + ".bxskel", arm, preprocess_matrix)
+            arm_preprocess_matrix = preprocess_matrix * arm.matrix_world if use_apply_modifiers else preprocess_matrix
+            save_armature(fixedname or filepath + "_" + arm.name + ".bxskel", arm, arm_preprocess_matrix)
+        if len(armatures.values()) == 0:
+            # If there is no skeleton, we export a dummy skeleton. The lib needs it for now.
+            file = open(fixedname, "w", encoding="utf8", newline="\n")
+            file.write('<?xml version="1.0" encoding="UTF-8"?>\n')
+            file.write('<!-- Automatically exported from Blender v{} using the bouge exporter by Lucas Beyer -->\n'.format(bpy.app.version_string))
+            common.BougeSkel('skeleton').writeXML(file)
+            file.close()
 
         save_materials(filepath + ".bxmat", materials.values())
         save_matset(filepath + ".bxmset", mesh_material_assossiations, materials.values())

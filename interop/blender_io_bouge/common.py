@@ -28,11 +28,14 @@ class BougeVertex:
 
     def writeXML(self, file):
         file.write('  <VERTEX><POS>{:.5f} {:.5f} {:.5f}</POS>\n'.format(*self.co))
-        file.write('          <ATTRIB TYPE="normal">{:.5f} {:.5f} {:.5f}</ATTRIB>\n'.format(*self.no))
+        file.write('          <ATTRIB TYPE="aVertexNormal">{:.5f} {:.5f} {:.5f}</ATTRIB>\n'.format(*self.no))
         for (uv, i) in zip(self.uv, range(len(self.uv))):
-            file.write('          <ATTRIB TYPE="texcoord{}">{:.5f} {:.5f}</ATTRIB>\n'.format(i, *uv))
+            file.write('          <ATTRIB TYPE="aVertexTextureCo{}">{:.5f} {:.5f}</ATTRIB>\n'.format(i or "", *uv))
         for influence in self.influences:
             file.write('          <INFLUENCE BONE="{}">{:.5f}</INFLUENCE>\n'.format(*influence))
+        if len(self.influences) == 0:
+            # We always need at least one bone!
+            file.write('          <INFLUENCE BONE="Bone">1.0</INFLUENCE>\n')
         file.write('  </VERTEX>\n')
 
     def __hash__(self):
@@ -58,7 +61,7 @@ class BougeSubmesh:
     def __addBougeVert(self, v):
         if v not in self.vertsLookup:
             self.verts.append(v)
-            print("added vert {}".format(v))
+            #print("added vert {}".format(v))
             return self.vertsLookup.setdefault(v, len(self.verts)-1)
         else:
             return self.vertsLookup[v]
@@ -133,11 +136,16 @@ class BougeSkel:
 
     def giveRootBone(self, bone):
         self.rootbones.append(bone)
+        #print('appending bone: ' + bone.name)
 
     def writeXML(self, file):
         file.write('<SKELETON NAME="{}">\n'.format(self.name))
+        #print('all bones: ' + str(self.rootbones))
         for rootbone in self.rootbones:
             rootbone.writeXML(file)
+        if len(self.rootbones) == 0:
+            # We always need at least one bone!
+            BougeBone('Bone', 1.0, mathutils.Vector(), mathutils.Quaternion()).writeXML(file)
         file.write('</SKELETON>\n\n')
 
 class BougeMaterial:

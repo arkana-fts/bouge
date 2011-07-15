@@ -220,8 +220,8 @@ namespace bouge {
         const_animation_iterator end_animation() const;
 
         std::set<std::string> missingBones() const;
-        std::set<std::string> missingMaterials() const;
-        std::set<std::string> missingMatsetSpecs() const;
+        std::set<std::string> missingMaterials(const std::string& in_restrictToMatset = "") const;
+        std::set<std::string> missingMatsetSpecs(const std::string& in_restrictToMatset = "") const;
         bool isComplete() const;
         CoreHardwareMeshPtr buildHardwareMesh(unsigned int bonesPerMesh, unsigned char bonesPerVertex = 4, unsigned char verticesPerFace = 3) const;
 

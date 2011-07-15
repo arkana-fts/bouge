@@ -298,7 +298,7 @@ namespace bouge {
     CoreModel& CoreModel::addMaterialSets(const std::vector<CoreMaterialSetPtr>& matsets)
     {
         for(std::vector<CoreMaterialSetPtr>::const_iterator i = matsets.begin() ; i != matsets.end() ; ++i) {
-            m_matsets[(*i)->name()] = *i;
+            this->addMaterialSet(*i);
         }
         return *this;
     }
@@ -624,7 +624,7 @@ namespace bouge {
                 Vertex vtx = iSubMesh->vertex(iVtx);
                 for(std::size_t iInfluence = 0 ; iInfluence < vtx.influenceCount() ; ++iInfluence) {
                     Influence influence = vtx.influence(iInfluence);
-                    if(!m_skel->hasBone(influence.sBoneName)) {
+                    if(!m_skel || !m_skel->hasBone(influence.sBoneName)) {
                         ret.insert(influence.sBoneName);
                     }
                 }
@@ -634,7 +634,7 @@ namespace bouge {
         // Check for all bones appearing in the animations.
         for(const_animation_iterator iAnim = this->begin_animation() ; iAnim != this->end_animation() ; ++iAnim) {
             for(CoreAnimation::const_iterator iTrack = iAnim->begin() ; iTrack != iAnim->end() ; ++iTrack) {
-                if(!m_skel->hasBone(iTrack.bone())) {
+                if(!m_skel || !m_skel->hasBone(iTrack.bone())) {
                     ret.insert(iTrack.bone());
                 }
             }
@@ -643,13 +643,18 @@ namespace bouge {
         return ret;
     }
 
-    std::set<std::string> CoreModel::missingMaterials() const
+    std::set<std::string> CoreModel::missingMaterials(const std::string& in_restrictToMatset) const
     {
         std::set<std::string> ret;
 
         for(const_materialset_iterator iMatSet = this->begin_materialset() ; iMatSet != this->end_materialset() ; ++iMatSet) {
+            // If restrictToMatset is specified, skip all matsets with a different name.
+            if(!in_restrictToMatset.empty() && iMatSet->name() != in_restrictToMatset)
+                continue;
+
             for(CoreMaterialSet::const_iterator iAssoss = iMatSet->begin() ; iAssoss != iMatSet->end() ; ++iAssoss) {
-                if(!this->hasMaterial(iAssoss.matname())) {
+                // Only count for actually existing submeshes.
+                if(!this->hasMaterial(iAssoss.matname()) && !this->mesh()->hasSubmesh(iAssoss.meshname())) {
                     ret.insert(iAssoss.matname());
                 }
             }
@@ -658,12 +663,16 @@ namespace bouge {
         return ret;
     }
 
-    std::set<std::string> CoreModel::missingMatsetSpecs() const
+    std::set<std::string> CoreModel::missingMatsetSpecs(const std::string& in_restrictToMatset) const
     {
         std::set<std::string> ret;
 
         for(CoreMesh::iterator iSubMesh = m_mesh->begin() ; iSubMesh != m_mesh->end() ; ++iSubMesh) {
             for(const_materialset_iterator iMatSet = this->begin_materialset() ; iMatSet != this->end_materialset() ; ++iMatSet) {
+                // If restrictToMatset is specified, skip all matsets with a different name.
+                if(!in_restrictToMatset.empty() && iMatSet->name() != in_restrictToMatset)
+                    continue;
+
                 try {
                     iMatSet->materialForMesh(iSubMesh->name());
                 } catch(const std::exception&) {

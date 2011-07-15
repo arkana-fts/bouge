@@ -69,12 +69,14 @@ namespace bouge {
     class BOUGE_API CoreHardwareMesh
     {
         typedef std::vector<CoreHardwareSubMesh> SubMeshContainer;
+        typedef std::map<std::string, std::vector<float> > GenericAttribs;
+        typedef std::map<std::string, std::size_t> GenericAttribsCoords;
     public:
         typedef shared_ptr<CoreHardwareMesh>::type Ptr;
 
         /// \NOTE If you want to create a hardware mesh that doesn't use bones
         ///       (that is, a static hardware mesh), just set both \a bonesPerMesh
-        ///       and \a bonesPerVertex to 0
+        ///       and \a bonesPerVertex to 0. Yes, both. Yes, there is reason for that.
         CoreHardwareMesh(CoreMeshPtrC coremesh, unsigned int bonesPerMesh, unsigned char bonesPerVertex = 4, unsigned char verticesPerFace = 3);
         virtual ~CoreHardwareMesh();
 
@@ -109,6 +111,7 @@ namespace bouge {
         class BOUGE_API const_iterator {
         public:
             const_iterator();
+            const_iterator(iterator me);
             ~const_iterator();
 
             bool operator==(const_iterator other) const;
@@ -167,6 +170,12 @@ namespace bouge {
         ///               It's actually exactly the same as in OpenGL.
         /// \return A reference to the current object for chaining operation.
         const CoreHardwareMesh& writeCoords(float* where, std::size_t stride) const;
+
+        /// \return A map mapping each generic attribute's name to the number
+        ///         of coordinates that attrib holds per vertex.
+        /// \note You can safely use this one inside a loop, the returned
+        ///       reference will not just die. It will die along with this object.
+        const GenericAttribsCoords& attribs() const;
 
         /// \return The number of \a name coordinates each vertex has. (Usually 3 or 4)
         /// \exception std::invalid_argument in case there is no such attribute.
@@ -332,11 +341,9 @@ namespace bouge {
         /// For each weight, this is the index of the bone palette it belongs to.
         std::vector<float> m_boneIndices;
 
-        typedef std::map<std::string, std::vector<float> > GenericAttribs;
         /// All the generic attributes of the vertices.
         GenericAttribs m_genericAttribs;
 
-        typedef std::map<std::string, std::size_t> GenericAttribsCoords;
         /// The number of floats each generic attribute holds.
         GenericAttribsCoords m_genericAttribCoordCount;
 

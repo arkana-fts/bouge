@@ -28,6 +28,7 @@
 
 #include <stdexcept>
 #include <set>
+#include <vector>
 #include <bouge/Exception.hpp>
 
 namespace bouge {
@@ -132,11 +133,14 @@ namespace bouge {
     {
         // The hardware mesh needs all the vertices to have the same attributes,
         // and all the attributes to have the same amount of coordinates.
-        // We need to check for this. Here, we take the informations from the first
-        // vertex, and will check all the next vertices against this.
-        if(coremesh->begin() != coremesh->end()) {
-            if(coremesh->begin()->vertexCount() > 0) {
-                Vertex vtx = coremesh->begin()->vertex(0);
+        // We need to check for this.
+        //
+        // Here, we just find _all_ generic attributes that are present in any
+        // submesh. If some submesh has less attributes than another one, they
+        // will be added to it.
+        for(CoreMesh::const_iterator submesh = coremesh->begin() ; submesh != coremesh->end() ; ++submesh) {
+            if(submesh->vertexCount() > 0) {
+                Vertex vtx = submesh->vertex(0);
 
                 for(Vertex::iterator i = vtx.begin() ; i != vtx.end() ; ++i) {
                     m_genericAttribCoordCount[i.name()] = i.value().size();
@@ -271,6 +275,8 @@ namespace bouge {
                                 // in the origin.
                                 // Hopefully, ... TODO
                                 throw BadDataException("We got a vertex (" + to_s(vtxId) + ") without any influences in submesh " + iSubMesh->name() + ". This is bad, please fix it, for example by creating a 'root bone' which influences it, but doesn't move.", __FILE__, __LINE__);
+                                // But we'd have to add that bone to the skeleton ...
+                                // How to solve this dilemma?
 //                                 vtx.addInfluence(Influence(1.0f, "__bicali__dummy__"));
 //                                 m_boneIndices.push_back(0.0f);
                             } else {
@@ -332,27 +338,26 @@ namespace bouge {
         // Add all the generic attributes. We do several checks to ensure
         // we have the same amount of attributes in each vertex and they
         // have the same dimension across vertices.
-        std::size_t nAttribsHandled = 0;
-        for(Vertex::iterator i = vtx.begin() ; i != vtx.end() ; ++i) {
-            GenericAttribsCoords::iterator attribCoordCount = m_genericAttribCoordCount.find(i.name());
+        for(GenericAttribsCoords::iterator attribCoordCount = m_genericAttribCoordCount.begin() ; attribCoordCount != m_genericAttribCoordCount.end() ; ++attribCoordCount) {
+            if(vtx.hasAttrib(attribCoordCount->first)) {
+                std::vector<float> attrib = vtx.attrib(attribCoordCount->first);
 
-            // This means, the vertex got an unwanted attribute. Skip it.
-            if(attribCoordCount == m_genericAttribCoordCount.end())
-                continue;
+                // This means the vertex's attribute has the wrong dimension! STOP HERE!
+                if(attrib.size() != attribCoordCount->second)
+                    throw BadDataException("Vertex with wrong-sized attribute '" + attribCoordCount->first + "' in submesh '" + submeshDiagnosticName + "' (dimension is " + to_s(attrib.size()) + " but should be " + to_s(attribCoordCount->second) +")", __FILE__, __LINE__);
 
-            // This means the vertex's attribute has the wrong dimension! STOP HERE!
-            if(i.value().size() != attribCoordCount->second)
-                throw BadDataException("Vertex with wrong-sized attribute '" + i.name() + "' in submesh '" + submeshDiagnosticName + "' (dimension is " + to_s(i.value().size()) + " but should be " + to_s(attribCoordCount->second) +")", __FILE__, __LINE__);
+                // If it got the correct size, copy over all the values.
+                for(std::vector<float>::iterator i = attrib.begin() ; i != attrib.end() ; ++i) {
+                    m_genericAttribs[attribCoordCount->first].push_back(*i);
+                }
 
-            for(std::vector<float>::iterator iCoord = i.value().begin() ; iCoord != i.value().end() ; ++iCoord) {
-                m_genericAttribs[i.name()].push_back(*iCoord);
+            } else {
+                // If the vertex doesn't have the attribute, we just throw dummys in.
+                for(std::size_t i = 0 ; i < attribCoordCount->second ; ++i) {
+                    m_genericAttribs[attribCoordCount->first].push_back(0.0f);
+                }
             }
-            nAttribsHandled++;
         }
-
-        // Check if we had enough attributes.
-        if(nAttribsHandled != m_genericAttribCoordCount.size())
-            throw BadDataException("Vertex with wrong number of attributes in submesh '" + submeshDiagnosticName + "': handled " + to_s(nAttribsHandled) + " while it should have been " + to_s(m_genericAttribCoordCount.size()), __FILE__, __LINE__);
     }
 
     CoreHardwareMesh::~CoreHardwareMesh()
@@ -428,6 +433,10 @@ namespace bouge {
     { }
 
     CoreHardwareMesh::const_iterator::const_iterator()
+    { }
+
+    CoreHardwareMesh::const_iterator::const_iterator(iterator me)
+        : myIter(me.myIter)
     { }
 
     CoreHardwareMesh::const_iterator::~const_iterator()
@@ -549,6 +558,11 @@ namespace bouge {
             p += stride;
         }
         return *this;
+    }
+
+    const CoreHardwareMesh::GenericAttribsCoords& CoreHardwareMesh::attribs() const
+    {
+        return m_genericAttribCoordCount;
     }
 
     std::size_t CoreHardwareMesh::attribCoordsPerVertex(std::string name) const

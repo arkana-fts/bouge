@@ -35,7 +35,7 @@ namespace bouge {
     {
         typedef std::map<std::string, CoreTrackPtr> TrackMap;
     public:
-        CoreAnimation(std::string name, TimeFunction* preferredControl);
+        CoreAnimation(std::string name, TimeFunction* preferredControl = 0);
         virtual ~CoreAnimation();
 
         BOUGE_USER_DATA;

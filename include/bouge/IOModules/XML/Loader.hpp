@@ -40,19 +40,19 @@ namespace bouge {
         virtual ~XMLLoader();
 
         virtual CoreMeshPtr loadMesh(const std::string& sFileName);
-        virtual CoreMeshPtr loadMesh(const void* pData, std::size_t size);
+        virtual CoreMeshPtr loadMesh(const void* pData, std::size_t size = (std::size_t)-1);
 
         virtual CoreSkeletonPtr loadSkeleton(const std::string& sFileName);
-        virtual CoreSkeletonPtr loadSkeleton(const void* pData, std::size_t size);
+        virtual CoreSkeletonPtr loadSkeleton(const void* pData, std::size_t size = (std::size_t)-1);
 
         virtual std::vector<CoreMaterialPtr> loadMaterial(const std::string& sFileName);
-        virtual std::vector<CoreMaterialPtr> loadMaterial(const void* pData, std::size_t size);
+        virtual std::vector<CoreMaterialPtr> loadMaterial(const void* pData, std::size_t size = (std::size_t)-1);
 
         virtual std::vector<CoreMaterialSetPtr> loadMaterialSet(const std::string& sFileName);
-        virtual std::vector<CoreMaterialSetPtr> loadMaterialSet(const void* pData, std::size_t size);
+        virtual std::vector<CoreMaterialSetPtr> loadMaterialSet(const void* pData, std::size_t size = (std::size_t)-1);
 
         virtual std::vector<CoreAnimationPtr> loadAnimation(const std::string& sFileName);
-        virtual std::vector<CoreAnimationPtr> loadAnimation(const void* pData, std::size_t size);
+        virtual std::vector<CoreAnimationPtr> loadAnimation(const void* pData, std::size_t size = (std::size_t)-1);
     private:
         XMLParser* m_parser;
     };

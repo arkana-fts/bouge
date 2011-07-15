@@ -64,7 +64,11 @@ namespace bouge
         CoreMesh_XMLHandler handler(*ret);
 
         // We haven't written a schema yet.
-        m_parser->parseXMLFileFromMem(handler, std::string(reinterpret_cast<const char*>(pData), size), "");
+        if(size == (std::size_t)-1) {
+            m_parser->parseXMLFileFromMem(handler, std::string(reinterpret_cast<const char*>(pData)), "");
+        } else {
+            m_parser->parseXMLFileFromMem(handler, std::string(reinterpret_cast<const char*>(pData), size), "");
+        }
 
         return ret;
     }
@@ -86,7 +90,11 @@ namespace bouge
         CoreSkeleton_XMLHandler handler(*ret);
 
         // We haven't written a schema yet.
-        m_parser->parseXMLFileFromMem(handler, std::string(reinterpret_cast<const char*>(pData), size), "");
+        if(size == (std::size_t)-1) {
+            m_parser->parseXMLFileFromMem(handler, std::string(reinterpret_cast<const char*>(pData)), "");
+        } else {
+            m_parser->parseXMLFileFromMem(handler, std::string(reinterpret_cast<const char*>(pData), size), "");
+        }
 
         return ret;
     }
@@ -108,7 +116,11 @@ namespace bouge
         CoreMaterial_XMLHandler handler(ret);
 
         // We haven't written a schema yet.
-        m_parser->parseXMLFileFromMem(handler, std::string(reinterpret_cast<const char*>(pData), size), "");
+        if(size == (std::size_t)-1) {
+            m_parser->parseXMLFileFromMem(handler, std::string(reinterpret_cast<const char*>(pData)), "");
+        } else {
+            m_parser->parseXMLFileFromMem(handler, std::string(reinterpret_cast<const char*>(pData), size), "");
+        }
 
         return ret;
     }
@@ -130,7 +142,11 @@ namespace bouge
         CoreMaterialSet_XMLHandler handler(ret);
 
         // We haven't written a schema yet.
-        m_parser->parseXMLFileFromMem(handler, std::string(reinterpret_cast<const char*>(pData), size), "");
+        if(size == (std::size_t)-1) {
+            m_parser->parseXMLFileFromMem(handler, std::string(reinterpret_cast<const char*>(pData)), "");
+        } else {
+            m_parser->parseXMLFileFromMem(handler, std::string(reinterpret_cast<const char*>(pData), size), "");
+        }
 
         return ret;
     }
@@ -152,7 +168,11 @@ namespace bouge
         CoreAnimation_XMLHandler handler(ret);
 
         // We haven't written a schema yet.
-        m_parser->parseXMLFileFromMem(handler, std::string(reinterpret_cast<const char*>(pData), size), "");
+        if(size == (std::size_t)-1) {
+            m_parser->parseXMLFileFromMem(handler, std::string(reinterpret_cast<const char*>(pData)), "");
+        } else {
+            m_parser->parseXMLFileFromMem(handler, std::string(reinterpret_cast<const char*>(pData), size), "");
+        }
 
         return ret;
     }

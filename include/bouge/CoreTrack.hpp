@@ -49,7 +49,6 @@ namespace bouge {
         Vector translation(float time) const;
         bool hasScale() const;
         Vector scale(float time) const;
-        AffineMatrix transform(float time) const;
 
         std::size_t keyframeCount() const;
         float duration() const;

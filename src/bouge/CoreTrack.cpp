@@ -111,45 +111,6 @@ namespace bouge {
         return from->scale().lerp(to->scale(), between);
     }
 
-    /// \TODO: probably, there is no more need for this (maybe bugged?) method by now.
-    AffineMatrix CoreTrack::transform(float time) const
-    {
-        AffineMatrix ret; // NRVO
-
-        const_iterator to = this->after(time);
-        const_iterator from = to;
-
-        // Second condition is, for now, to "hold" the last frame if time is past the end.
-        if(from != this->begin() && time <= to.time())
-            --from;
-
-        // Border cases... For example only 1 keyframe
-        if(from == to) {
-            // NRVO
-            ret = AffineMatrix::translation(from->translation()) * AffineMatrix::scale(from->scale()) * AffineMatrix::rotation(from->rotation());
-            return ret;
-        }
-
-        float interval = to.time() - from.time();
-        float between = (time - from.time())/interval;
-
-        /// \TODO: Verify this
-
-        if(this->hasTranslation()) {
-            ret = AffineMatrix::translation(from->translation().lerp(to->translation(), between));
-        }
-
-        if(this->hasScale()) {
-            ret *= AffineMatrix::scale(from->scale().lerp(to->scale(), between));
-        }
-
-        if(this->hasRotation()) {
-            ret *= AffineMatrix::rotation(from->rotation().nlerp(to->rotation(), between));
-        }
-
-        return ret;
-    }
-
     CoreTrack& CoreTrack::add(float time, CoreKeyframePtr keyframe)
     {
         m_keyframes.insert(std::make_pair(time, keyframe));

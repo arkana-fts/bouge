@@ -279,23 +279,27 @@ namespace bougeExample
 
         m_hwmesh = CoreHardwareMeshPtr(new CoreHardwareMesh(m_model->mesh(), 0, 0, 3));
 
+        // We allow two names for stuff just to be more compatible.
+        std::string normal = m_hwmesh->hasAttrib("aVertexNormal") ? "aVertexNormal" : "normal";
+        std::string texco = m_hwmesh->hasAttrib("aVertexTextureCo") ? "aVertexTextureCo" : "texcoord0";
+
         if(stride) {
-            bool hasTexCo = m_hwmesh->hasAttrib("texcoord0");
+            bool hasTexCo = m_hwmesh->hasAttrib(texco);
             m_shaderToUse = hasTexCo ? m_shaderWithTexture : m_shaderNoTexture;
 
             std::size_t coordsOffset = 0;
             std::size_t normalsOffset = m_hwmesh->coordsPerVertex();
-            std::size_t texCoOffset = normalsOffset + m_hwmesh->attribCoordsPerVertex("normal");
-            std::size_t floatsPerVertex = texCoOffset + (hasTexCo ? m_hwmesh->attribCoordsPerVertex("texcoord0") : 0);
+            std::size_t texCoOffset = normalsOffset + m_hwmesh->attribCoordsPerVertex(normal);
+            std::size_t floatsPerVertex = texCoOffset + (hasTexCo ? m_hwmesh->attribCoordsPerVertex(texco) : 0);
 
             m_stride = floatsPerVertex * sizeof(float);
 
             // Here, we compile all the vertex data into a single interleaved buffer.
             std::vector<float> data(floatsPerVertex * m_hwmesh->vertexCount());
             m_hwmesh->writeCoords(&data[coordsOffset], m_stride);
-            m_hwmesh->writeAttrib("normal", &data[normalsOffset], m_stride);
+            m_hwmesh->writeAttrib(normal, &data[normalsOffset], m_stride);
             if(hasTexCo)
-                m_hwmesh->writeAttrib("texcoord0", &data[texCoOffset], m_stride);
+                m_hwmesh->writeAttrib(texco, &data[texCoOffset], m_stride);
 
             // Upload that data into the VBO
             gl_BindBuffer(GL_ARRAY_BUFFER, m_VBOIds[1]);
@@ -307,12 +311,12 @@ namespace bougeExample
 
             if(m_shaderToUse->hasAttrib("aNormal")) {
                 gl_EnableVertexAttribArray(m_shaderToUse->attrib("aNormal"));
-                gl_VertexAttribPointer(m_shaderToUse->attrib("aNormal"), m_hwmesh->attribCoordsPerVertex("normal"), GL_FLOAT, GL_FALSE, m_stride, (const GLvoid*)(normalsOffset * sizeof(float)));
+                gl_VertexAttribPointer(m_shaderToUse->attrib("aNormal"), m_hwmesh->attribCoordsPerVertex(normal), GL_FLOAT, GL_FALSE, m_stride, (const GLvoid*)(normalsOffset * sizeof(float)));
             }
 
             if(hasTexCo && m_shaderToUse->hasAttrib("aTexCo")) {
                 gl_EnableVertexAttribArray(m_shaderToUse->attrib("aTexCo"));
-                gl_VertexAttribPointer(m_shaderToUse->attrib("aTexCo"), m_hwmesh->attribCoordsPerVertex("texcoord0"), GL_FLOAT, GL_FALSE, m_stride, (const GLvoid*)(texCoOffset * sizeof(float)));
+                gl_VertexAttribPointer(m_shaderToUse->attrib("aTexCo"), m_hwmesh->attribCoordsPerVertex(texco), GL_FLOAT, GL_FALSE, m_stride, (const GLvoid*)(texCoOffset * sizeof(float)));
             }
 
         } else {

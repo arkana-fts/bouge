@@ -280,10 +280,11 @@ namespace bougeExample
 
         // Now, we need to load all textures associated to the materials:
         for(CoreModel::material_iterator iMat = m_model->begin_material() ; iMat != m_model->end_material() ; ++iMat) {
-            if(!iMat->hasProprety("map"))
-                continue;
-
-            iMat->userData = bouge::UserDataPtr(new TextureUserData(iMat->proprety("map")));
+            if(iMat->hasProprety("map")) {
+                iMat->userData = bouge::UserDataPtr(new TextureUserData(iMat->proprety("map")));
+            } else if(iMat->hasProprety("uTexture")) {
+                iMat->userData = bouge::UserDataPtr(new TextureUserData(iMat->proprety("uTexture")));
+            }
         }
 
         m_modelInst = ModelInstancePtr(new ModelInstance(m_model));
@@ -303,14 +304,18 @@ namespace bougeExample
 
         m_hwmesh = m_model->buildHardwareMesh(maxBonesPerMesh, 4);
 
+        // We allow two names for stuff just to be more compatible.
+        std::string normal = m_hwmesh->hasAttrib("aVertexNormal") ? "aVertexNormal" : "normal";
+        std::string texco = m_hwmesh->hasAttrib("aVertexTextureCo") ? "aVertexTextureCo" : "texcoord0";
+
         if(stride) {
-            bool hasTexCo = m_hwmesh->hasAttrib("texcoord0");
+            bool hasTexCo = m_hwmesh->hasAttrib(texco);
             m_shaderToUse = hasTexCo ? m_shaderWithTexture : m_shaderNoTexture;
 
             std::size_t coordsOffset = 0;
             std::size_t normalsOffset = m_hwmesh->coordsPerVertex();
-            std::size_t texCoOffset = normalsOffset + m_hwmesh->attribCoordsPerVertex("normal");
-            std::size_t weightsOffset = texCoOffset + (hasTexCo ? m_hwmesh->attribCoordsPerVertex("texcoord0") : 0);
+            std::size_t texCoOffset = normalsOffset + m_hwmesh->attribCoordsPerVertex(normal);
+            std::size_t weightsOffset = texCoOffset + (hasTexCo ? m_hwmesh->attribCoordsPerVertex(texco) : 0);
             std::size_t indicesOffset = weightsOffset + m_hwmesh->weightsPerVertex();
             std::size_t floatsPerVertex = indicesOffset + m_hwmesh->boneIndicesPerVertex();
 
@@ -319,9 +324,9 @@ namespace bougeExample
             // Here, we compile all the vertex data into a single interleaved buffer.
             std::vector<float> data(floatsPerVertex * m_hwmesh->vertexCount());
             m_hwmesh->writeCoords(&data[coordsOffset], m_stride);
-            m_hwmesh->writeAttrib("normal", &data[normalsOffset], m_stride);
+            m_hwmesh->writeAttrib(normal, &data[normalsOffset], m_stride);
             if(hasTexCo)
-                m_hwmesh->writeAttrib("texcoord0", &data[texCoOffset], m_stride);
+                m_hwmesh->writeAttrib(texco, &data[texCoOffset], m_stride);
             m_hwmesh->writeWeights(&data[weightsOffset], m_stride);
             m_hwmesh->writeBoneIndices(&data[indicesOffset], m_stride);
 
@@ -335,12 +340,12 @@ namespace bougeExample
 
             if(m_shaderToUse->hasAttrib("aNormal")) {
                 gl_EnableVertexAttribArray(m_shaderToUse->attrib("aNormal"));
-                gl_VertexAttribPointer(m_shaderToUse->attrib("aNormal"), m_hwmesh->attribCoordsPerVertex("normal"), GL_FLOAT, GL_FALSE, m_stride, (const GLvoid*)(normalsOffset * sizeof(float)));
+                gl_VertexAttribPointer(m_shaderToUse->attrib("aNormal"), m_hwmesh->attribCoordsPerVertex(normal), GL_FLOAT, GL_FALSE, m_stride, (const GLvoid*)(normalsOffset * sizeof(float)));
             }
 
             if(hasTexCo && m_shaderToUse->hasAttrib("aTexCo")) {
                 gl_EnableVertexAttribArray(m_shaderToUse->attrib("aTexCo"));
-                gl_VertexAttribPointer(m_shaderToUse->attrib("aTexCo"), m_hwmesh->attribCoordsPerVertex("texcoord0"), GL_FLOAT, GL_FALSE, m_stride, (const GLvoid*)(texCoOffset * sizeof(float)));
+                gl_VertexAttribPointer(m_shaderToUse->attrib("aTexCo"), m_hwmesh->attribCoordsPerVertex(texco), GL_FLOAT, GL_FALSE, m_stride, (const GLvoid*)(texCoOffset * sizeof(float)));
             }
 
             if(m_shaderToUse->hasAttrib("aWeights")) {
@@ -535,10 +540,13 @@ namespace bougeExample
         static const std::string uNormalMatrix = "uNormalMatrix";
         static const std::string uAmbient = "uAmbient";
         static const std::string ambient = "ambient";
+        static const std::string ambient2 = "uMaterialAmbient";
         static const std::string uDiffuse = "uDiffuse";
         static const std::string diffuse = "diffuse";
+        static const std::string diffuse2 = "uMaterialDiffuse";
         static const std::string uSpecular = "uSpecular";
         static const std::string specular = "specular";
+        static const std::string specular2 = "uMaterialSpecular";
         static const std::string uShininess = "uShininess";
         static const std::string shininess = "shininess";
         static const std::string uDiffTex = "uDiffTex";
@@ -585,18 +593,24 @@ namespace bougeExample
 
             if(pMat->hasProprety(ambient)) {
                 m_shaderToUse->uniform3fv(uAmbient, 1, &pMat->propretyAsFvec(ambient)[0]);
+            } else if(pMat->hasProprety(ambient2)) {
+                m_shaderToUse->uniform3fv(uAmbient, 1, &pMat->propretyAsFvec(ambient2)[0]);
             }
 
             if(pMat->hasProprety(diffuse)) {
                 m_shaderToUse->uniform3fv(uDiffuse, 1, &pMat->propretyAsFvec(diffuse)[0]);
+            } else if(pMat->hasProprety(diffuse2)) {
+                m_shaderToUse->uniform3fv(uDiffuse, 1, &pMat->propretyAsFvec(diffuse2)[0]);
             }
 
             if(pMat->hasProprety(specular)) {
                 m_shaderToUse->uniform3fv(uSpecular, 1, &pMat->propretyAsFvec(specular)[0]);
-            }
-
-            if(pMat->hasProprety(shininess)) {
-                m_shaderToUse->uniformf(uShininess, pMat->propretyAsFvec(shininess)[0]);
+                if(pMat->hasProprety(shininess)) {
+                    m_shaderToUse->uniformf(uShininess, pMat->propretyAsFvec(shininess)[0]);
+                }
+            } else if(pMat->hasProprety(specular2)) {
+                m_shaderToUse->uniform3fv(uSpecular, 1, &pMat->propretyAsFvec(specular2)[0]);
+                m_shaderToUse->uniformf(uShininess, pMat->propretyAsFvec(specular2)[3]);
             }
 
             if(pMat->userData) {

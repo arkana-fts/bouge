@@ -96,7 +96,7 @@ namespace bouge
 
     bool CoreBone::hasParent() const
     {
-        return m_pParent;
+        return m_pParent.get() != 0;
     }
 
     CoreBonePtrC CoreBone::parent() const

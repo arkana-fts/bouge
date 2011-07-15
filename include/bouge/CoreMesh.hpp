@@ -90,10 +90,13 @@ namespace bouge {
 
         std::size_t vertexCount() const;
         std::size_t faceCount() const;
-        std::size_t submeshCount() const;
         bool allFacesAreTriangles() const;
 
         CoreMesh& add(CoreSubMeshPtr submesh);
+        std::size_t submeshCount() const;
+        bool hasSubmesh(const std::string& name) const;
+        CoreSubMeshPtr submesh(const std::string& name);
+        CoreSubMeshPtrC submesh(const std::string& name) const;
 
         class BOUGE_API iterator {
         public:

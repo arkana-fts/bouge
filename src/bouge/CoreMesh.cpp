@@ -191,6 +191,31 @@ namespace bouge
         return *this;
     }
 
+    bool CoreMesh::hasSubmesh(const std::string& name) const
+    {
+        return m_submeshes.find(name) != m_submeshes.end();
+    }
+
+    CoreSubMeshPtr CoreMesh::submesh(const std::string& name)
+    {
+        SubMeshMap::iterator i = m_submeshes.find(name);
+
+        if(i == m_submeshes.end())
+            throw std::invalid_argument("There is no submesh " + name + " in the mesh " + m_sName);
+
+        return i->second;
+    }
+
+    CoreSubMeshPtrC CoreMesh::submesh(const std::string& name) const
+    {
+        SubMeshMap::const_iterator i = m_submeshes.find(name);
+
+        if(i == m_submeshes.end())
+            throw std::invalid_argument("There is no submesh " + name + " in the mesh " + m_sName);
+
+        return i->second;
+    }
+
     CoreMesh::iterator::iterator(SubMeshMap::iterator me)
         : myIter(me)
     { }

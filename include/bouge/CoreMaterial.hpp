@@ -61,6 +61,7 @@ namespace bouge {
 
         bool hasProprety(const std::string& name) const;
         const std::string& proprety(const std::string& name) const;
+        const std::string& propretyOrDefault(const std::string& name, const std::string& def) const;
         /// \exception std::invalid_argument
         const std::vector<float>& propretyAsFvec(const std::string& name) const;
         CoreMaterial& proprety(const std::string& name, std::string value);

@@ -85,6 +85,12 @@ namespace bouge
         return i != m_propreties.end() ? i->second.val() : emptystr;
     }
 
+    const std::string& CoreMaterial::propretyOrDefault(const std::string& name, const std::string& def) const
+    {
+        PropretyMap::const_iterator i = m_propreties.find(name);
+        return i != m_propreties.end() ? i->second.val() : def;
+    }
+
     const std::vector<float>& CoreMaterial::propretyAsFvec(const std::string& name) const
     {
         PropretyMap::const_iterator i = m_propreties.find(name);

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Automatically exported from Blender v2.56 (sub 1) using the bouge exporter by Lucas Beyer -->
+<SKELETON NAME="FullTest">
+  <BONE NAME="Bone" LENGTH="0.60000" RELPOSITION="-0.00442 -0.00000 0.10012" RELROTATION="0.70711 0.00000 0.00000 0.70711">
+    <BONE NAME="Bone.001" LENGTH="0.60000" RELPOSITION="0.00000 0.60000 0.00000" RELROTATION="-0.50000 -0.50000 -0.50000 0.50000">
+      <BONE NAME="Bone.002" LENGTH="0.50000" RELPOSITION="0.00000 0.60000 0.00000" RELROTATION="0.50000 -0.50000 -0.50000 0.50000">
+      </BONE>
+    </BONE>
+  </BONE>
+</SKELETON>
+

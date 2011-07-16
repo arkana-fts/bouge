@@ -25,6 +25,7 @@
 #include <bouge/SkeletonInstance.hpp>
 #include <bouge/CoreBone.hpp>
 #include <bouge/Exception.hpp>
+#include <iostream>
 
 namespace bouge {
 
@@ -250,9 +251,10 @@ namespace bouge {
         //    -> The parent's scale then.
         m_absoluteRootPos = parent->m_absoluteRootPos + parent->m_absoluteBoneScale * parent->m_absoluteBoneRot.rotate(this->core()->relativeRootPosition() + this->core()->relativeBoneRotation().rotate(this->trans()));
 
-        m_absoluteBoneScale = Vector(1.0f, 1.0f, 1.0f) + this->core()->absoluteBoneRotation().rotate(this->scale() - Vector(1.0f, 1.0f, 1.0f)).abs();
+        m_absoluteBoneScale = this->core()->absoluteBoneRotation().rotate(this->scale()).abs();
 
         // This would scale all children too (inherit scale)
+        // TODO: Think about what to do here.
 //         m_absoluteBoneScale *= parent->m_absoluteBoneScale;
 
         return this->recalcMatrixCache();
@@ -268,12 +270,8 @@ namespace bouge {
         m_absoluteRootPos = this->core()->absoluteRootPosition() + this->core()->absoluteBoneRotation().rotate(this->trans());
         m_absoluteBoneRot = this->core()->absoluteBoneRotation() * this->rot();
 
-        // Note that we have to "shift" the scale into "vector space" because in
-        // "scale space", (1,1,1) means nothing, while in vector space it is
-        // (0,0,0) which means nothing.
-        // After having transformed the scale (in vector space), we need to get
-        // it back into scale space.
-        m_absoluteBoneScale = Vector(1.0f, 1.0f, 1.0f) + this->core()->absoluteBoneRotation().rotate(this->scale() - Vector(1.0f, 1.0f, 1.0f)).abs();
+        // Negative scalings make no sense, only the absolute value makes sense.
+        m_absoluteBoneScale = this->core()->absoluteBoneRotation().rotate(this->scale()).abs();
 
         return this->recalcMatrixCache();
     }

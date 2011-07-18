@@ -254,10 +254,11 @@ namespace bougeExample
 
         // Now, we need to load all textures associated to the materials:
         for(CoreModel::material_iterator iMat = m_model->begin_material() ; iMat != m_model->end_material() ; ++iMat) {
-            if(!iMat->hasProprety("map"))
-                continue;
-
-            iMat->userData = bouge::UserDataPtr(new TextureUserData(iMat->proprety("map")));
+            if(iMat->hasProprety("map")) {
+                iMat->userData = bouge::UserDataPtr(new TextureUserData(iMat->proprety("map")));
+            } else if(iMat->hasProprety("uTexture")) {
+                iMat->userData = bouge::UserDataPtr(new TextureUserData(iMat->proprety("uTexture")));
+            }
         }
 
         m_modelInst = StaticModelInstancePtr(new StaticModelInstance(m_model));
@@ -375,10 +376,13 @@ namespace bougeExample
         static const std::string uNormalMatrix = "uNormalMatrix";
         static const std::string uAmbient = "uAmbient";
         static const std::string ambient = "ambient";
+        static const std::string ambient2 = "uMaterialAmbient";
         static const std::string uDiffuse = "uDiffuse";
         static const std::string diffuse = "diffuse";
+        static const std::string diffuse2 = "uMaterialDiffuse";
         static const std::string uSpecular = "uSpecular";
         static const std::string specular = "specular";
+        static const std::string specular2 = "uMaterialSpecular";
         static const std::string uShininess = "uShininess";
         static const std::string shininess = "shininess";
         static const std::string uDiffTex = "uDiffTex";
@@ -408,18 +412,24 @@ namespace bougeExample
 
             if(pMat->hasProprety(ambient)) {
                 m_shaderToUse->uniform3fv(uAmbient, 1, &pMat->propretyAsFvec(ambient)[0]);
+            } else if(pMat->hasProprety(ambient2)) {
+                m_shaderToUse->uniform3fv(uAmbient, 1, &pMat->propretyAsFvec(ambient2)[0]);
             }
 
             if(pMat->hasProprety(diffuse)) {
                 m_shaderToUse->uniform3fv(uDiffuse, 1, &pMat->propretyAsFvec(diffuse)[0]);
+            } else if(pMat->hasProprety(diffuse2)) {
+                m_shaderToUse->uniform3fv(uDiffuse, 1, &pMat->propretyAsFvec(diffuse2)[0]);
             }
 
             if(pMat->hasProprety(specular)) {
                 m_shaderToUse->uniform3fv(uSpecular, 1, &pMat->propretyAsFvec(specular)[0]);
-            }
-
-            if(pMat->hasProprety(shininess)) {
-                m_shaderToUse->uniformf(uShininess, pMat->propretyAsFvec(shininess)[0]);
+                if(pMat->hasProprety(shininess)) {
+                    m_shaderToUse->uniformf(uShininess, pMat->propretyAsFvec(shininess)[0]);
+                }
+            } else if(pMat->hasProprety(specular2)) {
+                m_shaderToUse->uniform3fv(uSpecular, 1, &pMat->propretyAsFvec(specular2)[0]);
+                m_shaderToUse->uniformf(uShininess, pMat->propretyAsFvec(specular2)[3]);
             }
 
             if(pMat->userData) {

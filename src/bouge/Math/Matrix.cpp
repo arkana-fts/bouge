@@ -361,29 +361,26 @@ AffineMatrix AffineMatrix::transformation(const Vector& in_trans, const Quaterni
     return m;
 }
 
-AffineMatrix AffineMatrix::transformation(const Vector& in_trans, const Vector& in_scale, const Quaternion& in_rot)
+AffineMatrix AffineMatrix::transformation(const Vector& in_trans, const Quaternion& in_rot, const Vector& in_scale)
 {
     AffineMatrix m = AffineMatrix::rotation(in_rot);
 
     // Applying the scale and translation directly to the rotation is way more efficient.
 
-    m.m[0] *= in_scale.x(); m.m[4] *= in_scale.x(); m.m[8]  *= in_scale.x(); m.m[12] = in_trans.x();
-    m.m[1] *= in_scale.y(); m.m[5] *= in_scale.y(); m.m[9]  *= in_scale.y(); m.m[13] = in_trans.y();
-    m.m[2] *= in_scale.z(); m.m[6] *= in_scale.z(); m.m[10] *= in_scale.z(); m.m[14] = in_trans.z();
+    m.m[0] *= in_scale.x(); m.m[4] *= in_scale.y(); m.m[8]  *= in_scale.z(); m.m[12] = in_trans.x();
+    m.m[1] *= in_scale.x(); m.m[5] *= in_scale.y(); m.m[9]  *= in_scale.z(); m.m[13] = in_trans.y();
+    m.m[2] *= in_scale.x(); m.m[6] *= in_scale.y(); m.m[10] *= in_scale.z(); m.m[14] = in_trans.z();
     m.m3[0] = m.m[0]; m.m3[3] = m.m[4]; m.m3[6] = m.m[8];
     m.m3[1] = m.m[1]; m.m3[4] = m.m[5]; m.m3[7] = m.m[9];
     m.m3[2] = m.m[2]; m.m3[5] = m.m[6]; m.m3[8] = m.m[10];
 
     float one_over_s[] = {1.0f/in_scale.x(), 1.0f/in_scale.y(), 1.0f/in_scale.z()};
-    m.im[0] *= one_over_s[0]; m.im[4] *= one_over_s[1]; m.im[8]  *= one_over_s[2];
-    m.im[1] *= one_over_s[0]; m.im[5] *= one_over_s[1]; m.im[9]  *= one_over_s[2];
-    m.im[2] *= one_over_s[0]; m.im[6] *= one_over_s[1]; m.im[10] *= one_over_s[2];
-    float minus_t_over_s[] = {-in_trans.x() * one_over_s[0],
-                              -in_trans.y() * one_over_s[1],
-                              -in_trans.z() * one_over_s[2]};
-    m.im[12] = minus_t_over_s[0]*m.im[0] + minus_t_over_s[1]*m.im[4] + minus_t_over_s[2]*m.im[8];
-    m.im[13] = minus_t_over_s[0]*m.im[1] + minus_t_over_s[1]*m.im[5] + minus_t_over_s[2]*m.im[9];
-    m.im[14] = minus_t_over_s[0]*m.im[2] + minus_t_over_s[1]*m.im[6] + minus_t_over_s[2]*m.im[10];
+    m.im[0] *= one_over_s[0]; m.im[4] *= one_over_s[0]; m.im[8]  *= one_over_s[0];
+    m.im[1] *= one_over_s[1]; m.im[5] *= one_over_s[1]; m.im[9]  *= one_over_s[1];
+    m.im[2] *= one_over_s[2]; m.im[6] *= one_over_s[2]; m.im[10] *= one_over_s[2];
+    m.im[12] = - in_trans.x()*m.im[0] - in_trans.y()*m.im[4] - in_trans.z()*m.im[8];
+    m.im[13] = - in_trans.x()*m.im[1] - in_trans.y()*m.im[5] - in_trans.z()*m.im[9];
+    m.im[14] = - in_trans.x()*m.im[2] - in_trans.y()*m.im[6] - in_trans.z()*m.im[10];
 
     m.im3[0] = m.im[0]; m.im3[3] = m.im[4]; m.im3[6] = m.im[8];
     m.im3[1] = m.im[1]; m.im3[4] = m.im[5]; m.im3[7] = m.im[9];
@@ -391,7 +388,7 @@ AffineMatrix AffineMatrix::transformation(const Vector& in_trans, const Vector& 
     return m;
 }
 
-void AffineMatrix::setRotation(const Quaternion& in_quat)
+AffineMatrix& AffineMatrix::setRotation(const Quaternion& in_quat)
 {
     float s = 0.0f;
     float l = in_quat.dot(in_quat);
@@ -427,9 +424,11 @@ void AffineMatrix::setRotation(const Quaternion& in_quat)
     im3[0] = im[0]; im3[3] = im[4]; im3[6] = im[8];
     im3[1] = im[1]; im3[4] = im[5]; im3[7] = im[9];
     im3[2] = im[2]; im3[5] = im[6]; im3[8] = im[10];
+
+    return *this;
 }
 
-void AffineMatrix::setTransformation(const Vector& in_trans, const Quaternion& in_rot)
+AffineMatrix& AffineMatrix::setTransformation(const Vector& in_trans, const Quaternion& in_rot)
 {
     this->setRotation(in_rot);
 
@@ -442,35 +441,35 @@ void AffineMatrix::setTransformation(const Vector& in_trans, const Quaternion& i
     im[12] = -in_trans.x()*im[0] - in_trans.y()*im[4] - in_trans.z()*im[8];
     im[13] = -in_trans.x()*im[1] - in_trans.y()*im[5] - in_trans.z()*im[9];
     im[14] = -in_trans.x()*im[2] - in_trans.y()*im[6] - in_trans.z()*im[10];
+
+    return *this;
 }
 
-void AffineMatrix::setTransformation(const Vector& in_trans, const Vector& in_scale, const Quaternion& in_rot)
+AffineMatrix& AffineMatrix::setTransformation(const Vector& in_trans, const Quaternion& in_rot, const Vector& in_scale)
 {
     this->setRotation(in_rot);
 
     // Applying the scale and translation directly to the rotation is way more efficient.
 
-    m[0] *= in_scale.x(); m[4] *= in_scale.x(); m[8]  *= in_scale.x(); m[12] = in_trans.x();
-    m[1] *= in_scale.y(); m[5] *= in_scale.y(); m[9]  *= in_scale.y(); m[13] = in_trans.y();
-    m[2] *= in_scale.z(); m[6] *= in_scale.z(); m[10] *= in_scale.z(); m[14] = in_trans.z();
+    m[0] *= in_scale.x(); m[4] *= in_scale.y(); m[8]  *= in_scale.z(); m[12] = in_trans.x();
+    m[1] *= in_scale.x(); m[5] *= in_scale.y(); m[9]  *= in_scale.z(); m[13] = in_trans.y();
+    m[2] *= in_scale.x(); m[6] *= in_scale.y(); m[10] *= in_scale.z(); m[14] = in_trans.z();
     m3[0] = m[0]; m3[3] = m[4]; m3[6] = m[8];
     m3[1] = m[1]; m3[4] = m[5]; m3[7] = m[9];
     m3[2] = m[2]; m3[5] = m[6]; m3[8] = m[10];
 
     float one_over_s[] = {1.0f/in_scale.x(), 1.0f/in_scale.y(), 1.0f/in_scale.z()};
-    im[0] *= one_over_s[0]; im[4] *= one_over_s[1]; im[8]  *= one_over_s[2];
-    im[1] *= one_over_s[0]; im[5] *= one_over_s[1]; im[9]  *= one_over_s[2];
-    im[2] *= one_over_s[0]; im[6] *= one_over_s[1]; im[10] *= one_over_s[2];
-    float minus_t_over_s[] = {-in_trans.x() * one_over_s[0],
-                              -in_trans.y() * one_over_s[1],
-                              -in_trans.z() * one_over_s[2]};
-    im[12] = minus_t_over_s[0]*im[0] + minus_t_over_s[1]*im[4] + minus_t_over_s[2]*im[8];
-    im[13] = minus_t_over_s[0]*im[1] + minus_t_over_s[1]*im[5] + minus_t_over_s[2]*im[9];
-    im[14] = minus_t_over_s[0]*im[2] + minus_t_over_s[1]*im[6] + minus_t_over_s[2]*im[10];
-
+    im[0] *= one_over_s[0]; im[4] *= one_over_s[0]; im[8]  *= one_over_s[0];
+    im[1] *= one_over_s[1]; im[5] *= one_over_s[1]; im[9]  *= one_over_s[1];
+    im[2] *= one_over_s[2]; im[6] *= one_over_s[2]; im[10] *= one_over_s[2];
+    im[12] = - in_trans.x()*im[0] - in_trans.y()*im[4] - in_trans.z()*im[8];
+    im[13] = - in_trans.x()*im[1] - in_trans.y()*im[5] - in_trans.z()*im[9];
+    im[14] = - in_trans.x()*im[2] - in_trans.y()*im[6] - in_trans.z()*im[10];
     im3[0] = im[0]; im3[3] = im[4]; im3[6] = im[8];
     im3[1] = im[1]; im3[4] = im[5]; im3[7] = im[9];
     im3[2] = im[2]; im3[5] = im[6]; im3[8] = im[10];
+
+    return *this;
 }
 
 void AffineMatrix::operator *=(const AffineMatrix& o)

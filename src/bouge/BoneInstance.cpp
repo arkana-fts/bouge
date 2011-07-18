@@ -35,7 +35,6 @@ namespace bouge {
         , m_transl(/*core->relativeRootPosition()*/)
         , m_rotation(/*core->relativeBoneRotation()*/)
         , m_bDirty(true)
-        , m_absoluteBoneScale(1.0f, 1.0f, 1.0f)
     { }
 
     BoneInstance::~BoneInstance()
@@ -249,13 +248,7 @@ namespace bouge {
         //    -> The current animated position, relative to the rest pose (),
         //    -> The parent's rotation first,
         //    -> The parent's scale then.
-        m_absoluteRootPos = parent->m_absoluteRootPos + parent->m_absoluteBoneScale * parent->m_absoluteBoneRot.rotate(this->core()->relativeRootPosition() + this->core()->relativeBoneRotation().rotate(this->trans()));
-
-        m_absoluteBoneScale = this->core()->absoluteBoneRotation().rotate(this->scale()).abs();
-
-        // This would scale all children too (inherit scale)
-        // TODO: Think about what to do here.
-//         m_absoluteBoneScale *= parent->m_absoluteBoneScale;
+        m_absoluteRootPos = parent->m_absoluteRootPos + parent->m_absoluteBoneRot.rotate(parent->scale() * this->core()->relativeRootPosition()) + m_absoluteBoneRot.rotate(this->trans());
 
         return this->recalcMatrixCache();
     }
@@ -270,16 +263,13 @@ namespace bouge {
         m_absoluteRootPos = this->core()->absoluteRootPosition() + this->core()->absoluteBoneRotation().rotate(this->trans());
         m_absoluteBoneRot = this->core()->absoluteBoneRotation() * this->rot();
 
-        // Negative scalings make no sense, only the absolute value makes sense.
-        m_absoluteBoneScale = this->core()->absoluteBoneRotation().rotate(this->scale()).abs();
-
         return this->recalcMatrixCache();
     }
 
     BoneInstance& BoneInstance::recalcMatrixCache()
     {
         // No one-liner in order to save temporaries
-        m_transformationMatrix.setTransformation(m_absoluteRootPos, m_absoluteBoneScale, m_absoluteBoneRot);
+        m_transformationMatrix.setTransformation(m_absoluteRootPos, m_absoluteBoneRot, this->scale());
         m_transformationMatrix *= this->core()->modelSpaceToBoneSpaceMatrix();
         m_bDirty = false;
         return *this;
@@ -345,10 +335,5 @@ namespace bouge {
     {
         return m_transformationMatrix;
     }
-
-//     AffineMatrix BoneInstance::modelSpaceToBoneSpaceMatrix() const
-//     {
-//         return this->matrixBoneSpaceToModelSpace().inverse();
-//     }
 
 }

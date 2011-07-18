@@ -203,18 +203,40 @@ public:
 
     /// This creates a transformation matrix as they are commonly used. That is
     /// a matrix that first rotates, then scales and then translates a vector.
-    /// Thus the created matrix is M = Trans*Scale*Rotate.
+    /// Thus the created matrix is M = Trans*Rotate*Scale.
     /// \param in_trans The translational part of the matrix.
-    /// \param in_scale The scaling part of the matrix.
     /// \param in_rot The rotational part of the matrix.
-    /// \return A matrix concatenating M = in_trans*in_scale*in_rot.
+    /// \param in_scale The scaling part of the matrix.
+    /// \return A matrix concatenating M = in_trans*in_rot*in_scale.
     /// \note Obviously, this is more optimal than doing the concatenation by hand.
-    static AffineMatrix transformation(const Vector& in_trans, const Vector& in_scale, const Quaternion& in_rot);
+    static AffineMatrix transformation(const Vector& in_trans, const Quaternion& in_rot, const Vector& in_scale);
+
+    /// Sets this matrix to a rotation matrix. You can use this in some cases to
+    /// avoid the creation of temporaries.
+    /// \param in_quat A quaternion representing the wanted rotation.
+    /// \return A reference to self.
+    AffineMatrix& setRotation(const Quaternion& quat);
+
+    /// Sets this matrix to a transformation matrix (Trans*Rot).
+    /// Use this in order to avoid the creation of temporaries.
+    /// \param in_trans The translational part of the matrix.
+    /// \param in_rot The rotational part of the matrix.
+    /// \return A reference to self.
+    /// \note Obviously, this is more optimal than doing the concatenation by hand.
+    /// \see AffineMatrix::transformation
+    AffineMatrix& setTransformation(const Vector& in_trans, const Quaternion& in_rot);
+
+    /// Sets this matrix to a transformation matrix (Trans*Rot*Scale).
+    /// Use this in order to avoid the creation of temporaries.
+    /// \param in_trans The translational part of the matrix.
+    /// \param in_rot The rotational part of the matrix.
+    /// \param in_scale The scaling part of the matrix.
+    /// \return A reference to self.
+    /// \note Obviously, this is more optimal than doing the concatenation by hand.
+    /// \see AffineMatrix::transformation
+    AffineMatrix& setTransformation(const Vector& in_trans, const Quaternion& in_rot, const Vector& in_scale);
 
     // TEST
-    void setRotation(const Quaternion& quat);
-    void setTransformation(const Vector& in_trans, const Quaternion& in_rot);
-    void setTransformation(const Vector& in_trans, const Vector& in_scale, const Quaternion& in_rot);
 //     void rightMultInv(const AffineMatrix& o);
     // TEST
 

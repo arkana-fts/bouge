@@ -95,10 +95,11 @@ class ExportBouge(bpy.types.Operator, ExportHelper):
     #use_animation = BoolProperty(name="Animation", description="", default=False)
 
     # object group
-    use_apply_modifiers = BoolProperty(name="Apply Modifiers", description="Apply modifiers (preview resolution)", default=True)
-    use_rotate_x90 = BoolProperty(name="Rotate X90", description="", default=False)
+    use_apply_modifiers = BoolProperty(name="Apply Modifiers (/!\)", description="Apply modifiers (current frame has to be in rest pose!)", default=False)
+    #use_rotate_x90 = BoolProperty(name="Rotate X90", description="Doesn't currently work in all cases.", default=False)
 
     use_normalize_influences = BoolProperty(name="Normalize influences", description="Normalize influences (bone weights)", default=True)
+    only_four_influences = BoolProperty(name="Restrict to 4 influences", description="Drops weakest influences if a vertex got more than 4 influences.", default=True)
 
     # extra data group
     #use_edges = BoolProperty(name="Edges", description="", default=True)

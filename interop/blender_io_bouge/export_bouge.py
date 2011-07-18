@@ -42,7 +42,8 @@ from . import common
 def save_mesh(filepath, objects, scene,
               preprocess_matrix,          # Yes
               use_apply_modifiers,        # Yes
-              use_normalize_influences):  # Yes
+              use_normalize_influences,   # Yes
+              only_four_influences):      # Yes
     '''
     Basic write function. The context and options must be already set
     This can be accessed externaly
@@ -101,7 +102,7 @@ def save_mesh(filepath, objects, scene,
         for f in me.faces:
             # Triangles can be added as-is
             if len(f.vertices) == 3:
-                subme.addFace(use_normalize_influences, obj, me, None if f.use_smooth else f.normal, f, 0, 1, 2)
+                subme.addFace(use_normalize_influences, only_four_influences, obj, me, None if f.use_smooth else f.normal, f, 0, 1, 2)
 
             # Try to make an educated guess splitting up quads...
             elif len(f.vertices) == 4:
@@ -120,11 +121,11 @@ def save_mesh(filepath, objects, scene,
 
                 # Now choose the split whose sum of normals is closes to the quad's normal
                 if ideal_normal.dot(n1) > ideal_normal.dot(n2):
-                    subme.addFace(use_normalize_influences, obj, me, None if f.use_smooth else f.normal, f, *f1a)
-                    subme.addFace(use_normalize_influences, obj, me, None if f.use_smooth else f.normal, f, *f1b)
+                    subme.addFace(use_normalize_influences, only_four_influences, obj, me, None if f.use_smooth else f.normal, f, *f1a)
+                    subme.addFace(use_normalize_influences, only_four_influences, obj, me, None if f.use_smooth else f.normal, f, *f1b)
                 else:
-                    subme.addFace(use_normalize_influences, obj, me, None if f.use_smooth else f.normal, f, *f2a)
-                    subme.addFace(use_normalize_influences, obj, me, None if f.use_smooth else f.normal, f, *f2b)
+                    subme.addFace(use_normalize_influences, only_four_influences, obj, me, None if f.use_smooth else f.normal, f, *f2a)
+                    subme.addFace(use_normalize_influences, only_four_influences, obj, me, None if f.use_smooth else f.normal, f, *f2b)
 
     file = open(filepath, "w", encoding="utf8", newline="\n")
     file.write('<?xml version="1.0" encoding="UTF-8"?>\n')
@@ -408,6 +409,7 @@ def save(operator, context, filepath="",
          use_normalize_influences=False, # Yup
          use_filter_in="",               # Fucking shit, to redo...
          use_filter_out="",              # idem..
+         only_four_influences=True       # Yup
          ):
 
     #Window.WaitCursor(1)
@@ -442,7 +444,7 @@ def save(operator, context, filepath="",
 
         #print(preprocess_matrix)
         #print(type(preprocess_matrix))
-        armatures, materials, mesh_material_assossiations = save_mesh(filepath + ".bxmesh", objects, context.scene, preprocess_matrix, use_apply_modifiers, use_normalize_influences)
+        armatures, materials, mesh_material_assossiations = save_mesh(filepath + ".bxmesh", objects, context.scene, preprocess_matrix, use_apply_modifiers, use_normalize_influences, only_four_influences)
 
         fixedname = filepath + ".bxskel" if len(armatures) <= 1 else None
         for arm in armatures.values():

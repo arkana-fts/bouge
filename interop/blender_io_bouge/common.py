@@ -19,6 +19,8 @@
 import bpy
 import mathutils
 
+from operator import itemgetter
+
 class BougeVertex:
     def __init__(self, co, no, uvs, influences):
         self.co = co
@@ -66,13 +68,18 @@ class BougeSubmesh:
         else:
             return self.vertsLookup[v]
 
-    def __makeBougeVert(self, use_normalize_influences, obj, me, n, f, fvert):
+    def __makeBougeVert(self, use_normalize_influences, only_four_influences, obj, me, n, f, fvert):
         vtx = me.vertices[f.vertices[fvert]]
         co = vtx.co
         no = vtx.normal if n == None else n
 
         #That is: influences = [(BoneName1, w1), (BoneName2, w2), ..., nInfluences]
         influences = [(obj.vertex_groups.values()[influence.group].name, influence.weight) for influence in vtx.groups.values()]
+
+        #Now drop the smallest influences in the case we want at most 4:
+        if only_four_influences:
+            influences = sorted(influences, key=itemgetter(1), reverse=True)[:4]
+
         if use_normalize_influences:
             total_w = sum(w for bname,w in influences)
             influences = [(bname,w/total_w) for bname,w in influences]
@@ -83,10 +90,10 @@ class BougeSubmesh:
 
         return BougeVertex(co, no, uvs, influences)
 
-    def addFace(self, use_normalize_influences, obj, me, n, f, fvert1, fvert2, fvert3):
-        bv1 = self.__makeBougeVert(use_normalize_influences, obj, me, n, f, fvert1)
-        bv2 = self.__makeBougeVert(use_normalize_influences, obj, me, n, f, fvert2)
-        bv3 = self.__makeBougeVert(use_normalize_influences, obj, me, n, f, fvert3)
+    def addFace(self, use_normalize_influences, only_four_influences, obj, me, n, f, fvert1, fvert2, fvert3):
+        bv1 = self.__makeBougeVert(use_normalize_influences, only_four_influences, obj, me, n, f, fvert1)
+        bv2 = self.__makeBougeVert(use_normalize_influences, only_four_influences, obj, me, n, f, fvert2)
+        bv3 = self.__makeBougeVert(use_normalize_influences, only_four_influences, obj, me, n, f, fvert3)
         self.fidxs.append((self.__addBougeVert(bv1), self.__addBougeVert(bv2), self.__addBougeVert(bv3)))
 
     def writeXML(self, file):

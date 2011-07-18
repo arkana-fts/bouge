@@ -87,7 +87,13 @@ namespace bouge {
         Vector absoluteRootPosition() const;
         Quaternion absoluteBoneRotation() const;
 
+        /// \return A matrix transforming any vertex from bone space (that is
+        ///         its position is relative to the bone) to model space (that
+        ///         is its position is relative to the model).
         AffineMatrix boneSpaceToModelSpaceMatrix() const;
+        /// \return A matrix transforming any vertex from model space (that's
+        ///         the way it's stored in the mesh file) to bone space (that
+        ///         is its position is relative to the bone).
         AffineMatrix modelSpaceToBoneSpaceMatrix() const;
 
         class BOUGE_API iterator {
@@ -152,7 +158,6 @@ namespace bouge {
 
         Vector m_absoluteRootPosition;
         Quaternion m_absoluteBoneRotation;
-
         AffineMatrix m_mBoneSpaceToModelSpace;
 
         /// This is really just needed for visualization when the bone either has

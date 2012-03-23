@@ -97,7 +97,7 @@ def save_mesh(filepath, objects, scene,
 
         # Keep that in mind for creating material sets.
         if len(me.materials) > 0:
-            mesh_material_assossiations[subme.name] = [mat.name for mat in me.materials]
+            mesh_material_assossiations[subme.name] = [mat.name for mat in me.materials if mat]
 
         for f in me.faces:
             # Triangles can be added as-is

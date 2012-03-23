@@ -60,21 +60,21 @@ namespace bouge {
     template<>
     std::vector<float> BOUGE_API to< std::vector<float> >(std::string s);
 
-    template <class InputIterator, class OutputIterator>
-    std::string BOUGE_API to_s(InputIterator begin, const OutputIterator& end)
+    template <class InputIterator>
+    std::string BOUGE_API to_s(InputIterator begin, const InputIterator& end, const std::string& glue = " ")
     {
         InputIterator i = begin;
 
         std::stringstream ss;
         while(i != end) {
-            ss << *i << " ";
+            ss << *i << glue;
             ++i;
         }
 
         // remove the trailing space.
         std::string ret = ss.str();
-        if(ret.size() >= 1) {
-            ret.resize(ret.size()-1);
+        if(ret.size() >= glue.size()) {
+            ret.resize(ret.size()-glue.size());
         }
 
         return ret;

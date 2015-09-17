@@ -33,6 +33,7 @@ namespace bouge {
     {
     public:
         virtual void operator()(const Animation& anim) = 0;
+        virtual ~AnimationCallback() {};
     };
 
     class BOUGE_API Animation

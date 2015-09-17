@@ -36,6 +36,7 @@ namespace bouge {
     public:
         virtual float operator()(float t) = 0;
         virtual TimeFunction* clone() const = 0;
+        virtual ~TimeFunction() {};
     };
 
     /// This is just a constant over time. Looks like a straight line at height c.

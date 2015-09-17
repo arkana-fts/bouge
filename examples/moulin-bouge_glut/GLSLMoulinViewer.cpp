@@ -210,7 +210,7 @@ namespace bougeExample
             "    // Diffuse color.\n"
             "    vec3 l = vec3(0.0, 1.0, 0.0); // light position in eye space.\n"
             "    vec3 lmp = normalize(l - p);\n"
-            "    vec3 diff = texture(uDiffTex, vTexCo*textureSize(uDiffTex, 0)).rgb;\n"
+            "    vec3 diff = texture(uDiffTex, vTexCo*textureSize(uDiffTex)).rgb;\n"
             "    vec4 Cd = vec4(diff * dot(n, lmp), 1.0);\n"
             "\n"
             "    // Specular color.\n"

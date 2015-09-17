@@ -249,7 +249,7 @@ namespace bougeExample
         glDrawArrays(GL_POINTS, 0, m_VBOData.size()/m_nVertexComponents/2);
 
         // then, the tail points in red.
-        gl_VertexAttribPointer(m_pColorOnlyShader->attrib("aVertex"), m_nVertexComponents, GL_FLOAT, GL_FALSE, stride, (const GLvoid*)(stride/2));
+        gl_VertexAttribPointer(m_pColorOnlyShader->attrib("aVertex"), m_nVertexComponents, GL_FLOAT, GL_FALSE, stride, (const GLvoid*)((long)stride/2));
 
         m_pColorOnlyShader->uniform4fv("uColor", 1, red);
 

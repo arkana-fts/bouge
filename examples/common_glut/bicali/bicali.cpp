@@ -1507,6 +1507,15 @@ static PFNGLBINDBUFFERPROC glBindBuffer = 0;
 static PFNGLBUFFERDATAPROC glBufferData = 0;
 static PFNGLDRAWARRAYSPROC glDrawArrays = 0;
 
+    // VAO functions
+typedef BICALI_PRERET_DECO void (BICALI_POSTRET_DECO *PFNGLGENVERTEXARRAYSPROC) (GLsizei n, GLuint *arrays);
+typedef BICALI_PRERET_DECO void (BICALI_POSTRET_DECO *PFNGLDELETEVERTEXARRAYSPROC) (GLsizei n, const GLuint *arrays);
+typedef BICALI_PRERET_DECO void (BICALI_POSTRET_DECO *PFNGLBINDVERTEXARRAYPROC) (GLuint array);
+
+static PFNGLGENVERTEXARRAYSPROC glGenVertexArrays = 0;
+static PFNGLDELETEVERTEXARRAYSPROC glDeleteVertexArrays = 0;
+static PFNGLBINDVERTEXARRAYPROC glBindVertexArray = 0;
+
     // Alpha blending functions
 typedef BICALI_PRERET_DECO void (BICALI_POSTRET_DECO *PFNGLDISABLEPROC) (GLenum cap);
 typedef BICALI_PRERET_DECO void (BICALI_POSTRET_DECO *PFNGLENABLEPROC) (GLenum cap);
@@ -1616,6 +1625,10 @@ extern BICALI_PRERET_DECO void BICALI_POSTRET_DECO glGenBuffers(GLsizei n, GLuin
 extern BICALI_PRERET_DECO void BICALI_POSTRET_DECO glBufferData(GLenum target, GLsizeiptr size, const GLvoid *data, GLenum usage);
 extern BICALI_PRERET_DECO void BICALI_POSTRET_DECO glDrawArrays(GLenum mode, GLint first, GLsizei count);
 
+extern BICALI_PRERET_DECO void BICALI_POSTRET_DECO glGenVertexArrays(GLsizei n, GLuint *arrays);
+extern BICALI_PRERET_DECO void BICALI_POSTRET_DECO glDeleteVertexArrays(GLsizei n, const GLuint *arrays);
+extern BICALI_PRERET_DECO void BICALI_POSTRET_DECO glBindVertexArray(GLuint array);
+
 extern BICALI_PRERET_DECO void BICALI_POSTRET_DECO glDisable(GLenum cap);
 extern BICALI_PRERET_DECO void BICALI_POSTRET_DECO glEnable(GLenum cap);
 extern BICALI_PRERET_DECO GLboolean BICALI_POSTRET_DECO glIsEnabled(GLenum cap);
@@ -1723,6 +1736,10 @@ void bicali::lazy_init_gl()
     glBufferData = (PFNGLBUFFERDATAPROC)getEntryPoint("glBufferData");
     glDrawArrays = (PFNGLDRAWARRAYSPROC)getEntryPoint("glDrawArrays");
 
+    glGenVertexArrays = (PFNGLGENVERTEXARRAYSPROC)getEntryPoint("glGenVertexArrays");
+    glDeleteVertexArrays = (PFNGLDELETEVERTEXARRAYSPROC)getEntryPoint("glDeleteVertexArrays");
+    glBindVertexArray = (PFNGLBINDVERTEXARRAYPROC)getEntryPoint("glBindVertexArray");
+
     glDisable = ::glDisable;
     glEnable = ::glEnable;
     glIsEnabled = ::glIsEnabled;
@@ -1782,6 +1799,10 @@ void bicali::lazy_init_gl()
     glBindBuffer = ::glBindBuffer;
     glBufferData = ::glBufferData;
     glDrawArrays = ::glDrawArrays;
+
+    glGenVertexArrays = ::glGenVertexArrays;
+    glDeleteVertexArrays = ::glDeleteVertexArrays;
+    glBindVertexArray = ::glBindVertexArray;
 
     glDisable = ::glDisable;
     glEnable = ::glEnable;
@@ -2623,57 +2644,59 @@ private:
     GLint m_oldBlends[6];
 };
 
-TextVBO::TextVBO(const std::vector<float>& data, unsigned int type, unsigned int vert_coords_per_vert, unsigned int tex_coords_per_vert)
-    : m_vboid(0)
+TextVBO::TextVBO(const std::vector<float>& data, unsigned int type, unsigned int vert_coords_per_vert, unsigned int tex_coords_per_vert, GLuint aVertex, GLuint aTexCo)
+    : m_vaoid(0)
+    , m_vboid(0)
     , m_type(type)
+    , m_floats_per_vert(vert_coords_per_vert + tex_coords_per_vert)
     , m_nVerts(0)
 {
+    glGenVertexArrays(1, &m_vaoid);
+    glBindVertexArray(m_vaoid);
+
     glGenBuffers(1, &m_vboid);
+    glBindBuffer(GL_ARRAY_BUFFER, m_vboid);
+
+    // Setup the VAO to know which VBO, which data layout and which attribute bindings it uses.
+    const GLsizei stride = m_floats_per_vert*sizeof(float);
+
+    glVertexAttribPointer(aVertex, vert_coords_per_vert, GL_FLOAT, GL_FALSE, stride, (const GLvoid*)(0 * sizeof(float)));
+    glEnableVertexAttribArray(aVertex);
+
+    if(aTexCo != (GLuint)-1) {
+        glVertexAttribPointer(aTexCo, tex_coords_per_vert, GL_FLOAT, GL_FALSE, stride, (const GLvoid*)(vert_coords_per_vert * sizeof(float)));
+        glEnableVertexAttribArray(aTexCo);
+    }
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
 
     if(!data.empty()) {
-        this->upload(data, vert_coords_per_vert, tex_coords_per_vert);
+        this->upload(data);
     }
 }
 
 TextVBO::~TextVBO()
 {
     glDeleteBuffers(1, &m_vboid);
+    glDeleteVertexArrays(1, &m_vaoid);
 }
 
-void TextVBO::upload(const std::vector<float>& data, unsigned int vert_coords_per_vert, unsigned int tex_coords_per_vert)
+void TextVBO::upload(const std::vector<float>& data)
 {
-    m_vert_coords_per_vert = vert_coords_per_vert;
-    m_tex_coords_per_vert = tex_coords_per_vert;
-    const GLsizei floats_per_vert = m_vert_coords_per_vert + m_tex_coords_per_vert;
-    m_nVerts = data.size() / floats_per_vert;
-
+    m_nVerts = data.size() / m_floats_per_vert;
     glBindBuffer(GL_ARRAY_BUFFER, m_vboid);
     glBufferData(GL_ARRAY_BUFFER, sizeof(float) * data.size(), &data[0], m_type);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void TextVBO::render(unsigned int vtxAttrib, unsigned int texAttrib) const
+void TextVBO::render() const
 {
-    glBindBuffer(GL_ARRAY_BUFFER, m_vboid);
-
-    const GLsizei floats_per_vert = m_vert_coords_per_vert + m_tex_coords_per_vert;
-    const GLsizei stride = floats_per_vert*sizeof(float);
-
-    glEnableVertexAttribArray(vtxAttrib);
-    glVertexAttribPointer(vtxAttrib, m_vert_coords_per_vert, GL_FLOAT, GL_FALSE, stride, (const GLvoid*)(0 * sizeof(float)));
-
-    if(texAttrib != (unsigned int)-1) {
-        glEnableVertexAttribArray(texAttrib);
-        glVertexAttribPointer(texAttrib, m_tex_coords_per_vert, GL_FLOAT, GL_FALSE, stride, (const GLvoid*)(m_vert_coords_per_vert * sizeof(float)));
+    if(m_nVerts) {
+        glBindVertexArray(m_vaoid);
+        glDrawArrays(GL_TRIANGLES, 0, m_nVerts);
+        glBindVertexArray(0);
     }
-
-    glDrawArrays(GL_TRIANGLES, 0, m_nVerts);
-
-    glDisableVertexAttribArray(vtxAttrib);
-    if(texAttrib != (unsigned int)-1) {
-        glDisableVertexAttribArray(texAttrib);
-    }
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 } } // namespace bicali::detail
@@ -2686,7 +2709,10 @@ namespace bicali {
 
 StaticText::StaticText(const char* str, int x, int y, const BitmapFont* pFont, Format fmt, const float* tint4f)
     : m_pFont(pFont)
-    , m_vbo(detail::make_buffer(str, detail::TextWalker(str, detail::cp_utf8, fmt, pFont, x, y)), GL_STATIC_DRAW, 2, 2)
+    , m_vbo(detail::make_buffer(str, detail::TextWalker(str, detail::cp_utf8, fmt, pFont, x, y)),
+            GL_STATIC_DRAW, 2, 2,
+            detail::g_glyphShader->attrib("aVertex"),
+            detail::g_glyphShader->attrib("aTexCo"))
 {
     if(tint4f) {
         m_tint[0] = tint4f[0];
@@ -2718,9 +2744,7 @@ StaticText& StaticText::draw()
     // Upload the tinting color.
     detail::g_glyphShader->uniform4fv("uTint", 1, m_tint);
 
-    static GLuint aVertex = detail::g_glyphShader->attrib("aVertex");
-    static GLuint aTexCo = detail::g_glyphShader->attrib("aTexCo");
-    m_vbo.render(aVertex, aTexCo);
+    m_vbo.render();
 
     m_pFont->deselectTexture(0);
     glUseProgram(0);
@@ -2737,7 +2761,10 @@ namespace bicali {
 
 BufferedText::BufferedText(const char* str, Format fmt, const BitmapFont* pFont)
     : m_pFont(pFont)
-    , m_vbo(detail::make_buffer(str, detail::TextWalker(str, detail::cp_utf8, fmt, pFont)), GL_STATIC_DRAW, 2, 2)
+    , m_vbo(detail::make_buffer(str, detail::TextWalker(str, detail::cp_utf8, fmt, pFont)),
+            GL_STATIC_DRAW, 2, 2,
+            detail::g_glyphShader->attrib("aVertex"),
+            detail::g_glyphShader->attrib("aTexCo"))
 {
 }
 
@@ -2768,9 +2795,7 @@ BufferedText& BufferedText::draw(int x, int y, const float *in_vTint4f)
         detail::g_glyphShader->uniform4fv("uTint", 1, white);
     }
 
-    static GLuint aVertex = detail::g_glyphShader->attrib("aVertex");
-    static GLuint aTexCo = detail::g_glyphShader->attrib("aTexCo");
-    m_vbo.render(aVertex, aTexCo);
+    m_vbo.render();
 
     m_pFont->deselectTexture(0);
     glUseProgram(0);
@@ -2787,7 +2812,9 @@ namespace bicali {
 
 DynamicText::DynamicText(const class BitmapFont* pFont)
     : m_pFont(pFont)
-    , m_vbo(std::vector<float>(), GL_DYNAMIC_DRAW, 2, 2)
+    , m_vbo(std::vector<float>(), GL_DYNAMIC_DRAW, 2, 2,
+            detail::g_glyphShader->attrib("aVertex"),
+            detail::g_glyphShader->attrib("aTexCo"))
 { }
 
 DynamicText::~DynamicText()
@@ -2796,7 +2823,7 @@ DynamicText::~DynamicText()
 DynamicText& DynamicText::draw(const char* str, int x, int y, Format fmt, const float* in_vTint4f)
 {
     // Generate the VBO
-    m_vbo.upload(detail::make_buffer(str, detail::TextWalker(str, detail::cp_utf8, fmt, m_pFont, x, y)), 2, 2);
+    m_vbo.upload(detail::make_buffer(str, detail::TextWalker(str, detail::cp_utf8, fmt, m_pFont, x, y)));
 
     detail::SetBlendMode set; // Stores, sets and restores blend mode.
 
@@ -2818,9 +2845,7 @@ DynamicText& DynamicText::draw(const char* str, int x, int y, Format fmt, const 
         detail::g_glyphShader->uniform4fv("uTint", 1, white);
     }
 
-    static GLuint aVertex = detail::g_glyphShader->attrib("aVertex");
-    static GLuint aTexCo = detail::g_glyphShader->attrib("aTexCo");
-    m_vbo.render(aVertex, aTexCo);
+    m_vbo.render();
 
     m_pFont->deselectTexture(0);
     glUseProgram(0);
@@ -2859,7 +2884,8 @@ Bitmap::Bitmap(const void* in_pixels, unsigned int w, unsigned int h, float z, c
     : m_w(w)
     , m_h(h)
     , m_viewproj(viewproj)
-    , m_myTexVBO(detail::texturedQuadData(z, (float)w, (float)h), GL_STATIC_DRAW, 3, 0)
+    , m_myTexVBO(detail::texturedQuadData(z, (float)w, (float)h),
+                 GL_STATIC_DRAW, 3, 0, detail::g_imageShader->attrib("aVertex"), -1)
 {
     glGenTextures(1, &m_TexId);
     glBindTexture(GL_TEXTURE_RECTANGLE, m_TexId);
@@ -2897,8 +2923,7 @@ const Bitmap& Bitmap::draw(int x, int y, const float* in_vTint4f) const
         detail::g_imageShader->uniform4fv("uTint", 1, white);
     }
 
-    static GLuint aVertex = detail::g_imageShader->attrib("aVertex");
-    m_myTexVBO.render(aVertex, -1);
+    m_myTexVBO.render();
 
     this->deselectTexture(0);
     glUseProgram(0);
@@ -3245,11 +3270,11 @@ void init(/*int x, int y,*/ int w, int h)
 {
     lazy_init_gl();
 
-    g_pMgr = new BitmapFontManager();
-    g_pMgr->viewport(/*x, y,*/ w, h);
-
     detail::g_glyphShader = new detail::Shader(detail::g_sGlyphVertShader, detail::g_sGlyphFragShader, 0);
     detail::g_imageShader = new detail::Shader(detail::g_sImageVertShader, detail::g_sImageFragShader, 0);
+
+    g_pMgr = new BitmapFontManager();
+    g_pMgr->viewport(/*x, y,*/ w, h);
 }
 
 void deinit()

@@ -102,17 +102,17 @@ namespace detail {
 
 class TextVBO {
 public:
-    TextVBO(const std::vector<float>& data, unsigned int type, unsigned int vert_coords_per_vert, unsigned int tex_coords_per_vert);
+    TextVBO(const std::vector<float>& data, unsigned int type, unsigned int vert_coords_per_vert, unsigned int tex_coords_per_vert, unsigned int aVertex, unsigned int aTexCo);
     ~TextVBO();
 
-    void upload(const std::vector< float >& data, unsigned int vert_coords_per_vert, unsigned int tex_coords_per_vert);
-    void render(unsigned int vtxAttrib, unsigned int texAttrib) const;
+    void upload(const std::vector<float>& data);
+    void render() const;
 private:
+    unsigned int m_vaoid;
     unsigned int m_vboid;
     unsigned int m_type;
+    unsigned int m_floats_per_vert;
     int m_nVerts;
-    unsigned int m_vert_coords_per_vert;
-    unsigned int m_tex_coords_per_vert;
 };
 
 class Shader {

@@ -256,6 +256,7 @@ namespace bougeExample
 
     void Viewer::reshape(int w, int h)
     {
+        glViewport(0, 0, w, h);
         m_cam.resize(w, h);
         bicali::viewport(/*0, 0,*/ w, h);
     }

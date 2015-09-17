@@ -959,7 +959,8 @@ bool TiXmlDocument::LoadFile( FILE* file, TiXmlEncoding encoding )
 	fseek( file, 0, SEEK_SET );
 
 	// Strange case, but good to handle up front.
-	if ( length <= 0 )
+	// The 7ff.. is LONG_MAX and happens for directories on modern linux.
+	if ( length <= 0 || length == 0x7fffffffffffffff)
 	{
 		SetError( TIXML_ERROR_DOCUMENT_EMPTY, 0, 0, TIXML_ENCODING_UNKNOWN );
 		return false;

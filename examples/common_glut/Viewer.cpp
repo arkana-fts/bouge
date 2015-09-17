@@ -177,7 +177,7 @@ namespace bougeExample
 
     Viewer::~Viewer()
     {
-        gl_DeleteBuffers(1, &m_csysVBO);
+        gl_DeleteVertexArrays(1, &m_csysVAO);
         bicali::deinit();
         checkError("Viewer::~Viewer");
     }
@@ -236,9 +236,22 @@ namespace bougeExample
              0.0f, 0.0f,-1.0f,
         };
 
-        gl_GenBuffers(1, &m_csysVBO);
-        gl_BindBuffer(GL_ARRAY_BUFFER, m_csysVBO);
+        gl_GenVertexArrays(1, &m_csysVAO);
+        gl_BindVertexArray(m_csysVAO);
+
+        GLuint vbo;
+        gl_GenBuffers(1, &vbo);
+        gl_BindBuffer(GL_ARRAY_BUFFER, vbo);
         gl_BufferData(GL_ARRAY_BUFFER, sizeof(fCsysData), fCsysData, GL_STATIC_DRAW);
+        gl_BindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+        gl_VertexAttribPointer(m_pColorOnlyShader->attrib("aVertex"), 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*)0);
+        gl_EnableVertexAttribArray(m_pColorOnlyShader->attrib("aVertex"));
+
+        gl_BindVertexArray(0);
+
+        // Can already decrease refcount here, since VAO has ref on it, keeping it alive.
+        gl_DeleteBuffers(1, &vbo);
     }
 
     void Viewer::reshape(int w, int h)
@@ -385,7 +398,6 @@ namespace bougeExample
         // Well, it can't do, as it isn't thread-safe!
         static const std::string uModelViewProjectionMatrix = "uModelViewProjectionMatrix";
         static const std::string uModelViewMatrix = "uModelViewMatrix";
-        static const std::string aVertex = "aVertex";
         static const std::string uColor = "uColor";
         static const float red[] = {1.0f, 0.0f, 0.0f, 1.0f};
         static const float darkred[] = {0.5f, 0.0f, 0.0f, 1.0f};
@@ -403,42 +415,22 @@ namespace bougeExample
         m_pColorOnlyShader->uniformMatrix4fv(uModelViewMatrix, 1, false, cam.view().array16f());
 
         // VERY inefficient drawing of a coordinate system :)
-        gl_BindBuffer(GL_ARRAY_BUFFER, m_csysVBO);
-        gl_BindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        gl_BindVertexArray(m_csysVAO);
 
-        gl_EnableVertexAttribArray(m_pColorOnlyShader->attrib(aVertex));
-        gl_VertexAttribPointer(m_pColorOnlyShader->attrib(aVertex), 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*)0);
         m_pColorOnlyShader->uniform4fv(uColor, 1, red);
         glDrawArrays(GL_LINES, 0, 2);
-
-        gl_EnableVertexAttribArray(m_pColorOnlyShader->attrib(aVertex));
-        gl_VertexAttribPointer(m_pColorOnlyShader->attrib(aVertex), 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*)(6*sizeof(float)));
         m_pColorOnlyShader->uniform4fv(uColor, 1, darkred);
-        glDrawArrays(GL_LINES, 0, 2);
-
-        gl_EnableVertexAttribArray(m_pColorOnlyShader->attrib(aVertex));
-        gl_VertexAttribPointer(m_pColorOnlyShader->attrib(aVertex), 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*)(12*sizeof(float)));
+        glDrawArrays(GL_LINES, 2, 2);
         m_pColorOnlyShader->uniform4fv(uColor, 1, green);
-        glDrawArrays(GL_LINES, 0, 2);
-
-        gl_EnableVertexAttribArray(m_pColorOnlyShader->attrib(aVertex));
-        gl_VertexAttribPointer(m_pColorOnlyShader->attrib(aVertex), 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*)(18*sizeof(float)));
+        glDrawArrays(GL_LINES, 4, 2);
         m_pColorOnlyShader->uniform4fv(uColor, 1, darkgreen);
-        glDrawArrays(GL_LINES, 0, 2);
-
-        gl_EnableVertexAttribArray(m_pColorOnlyShader->attrib(aVertex));
-        gl_VertexAttribPointer(m_pColorOnlyShader->attrib(aVertex), 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*)(24*sizeof(float)));
+        glDrawArrays(GL_LINES, 6, 2);
         m_pColorOnlyShader->uniform4fv(uColor, 1, blue);
-        glDrawArrays(GL_LINES, 0, 2);
-
-        gl_EnableVertexAttribArray(m_pColorOnlyShader->attrib(aVertex));
-        gl_VertexAttribPointer(m_pColorOnlyShader->attrib(aVertex), 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*)(30*sizeof(float)));
+        glDrawArrays(GL_LINES, 8, 2);
         m_pColorOnlyShader->uniform4fv(uColor, 1, darkblue);
-        glDrawArrays(GL_LINES, 0, 2);
+        glDrawArrays(GL_LINES,10, 2);
 
-        gl_BindBuffer(GL_ARRAY_BUFFER, 0);
-        gl_BindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
+        gl_BindVertexArray(0);
         checkError("Viewer::render");
     }
 }

@@ -97,7 +97,6 @@ namespace bougeExample {
         ShaderPtr m_pColorOnlyShader;
 
     private:
-        GLuint m_csysVBO;
         GLuint m_csysVAO;
 
         bicali::StaticText* m_txtInfo;

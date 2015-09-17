@@ -434,5 +434,15 @@ namespace bougeExample
         gl_BindVertexArray(0);
         checkError("Viewer::render");
     }
+
+    std::string dirname(const std::string& file)
+    {
+        std::size_t idx = file.find_last_of('/');
+        if(idx == std::string::npos) {
+            return "./";
+        }
+
+        return file.substr(0, idx+1);
+    }
 }
 

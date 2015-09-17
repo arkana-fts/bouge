@@ -281,9 +281,9 @@ namespace bougeExample
         // Now, we need to load all textures associated to the materials:
         for(CoreModel::material_iterator iMat = m_model->begin_material() ; iMat != m_model->end_material() ; ++iMat) {
             if(iMat->hasProprety("map")) {
-                iMat->userData = bouge::UserDataPtr(new TextureUserData(iMat->proprety("map")));
+                iMat->userData = bouge::UserDataPtr(new TextureUserData(dirname(filename) + iMat->proprety("map")));
             } else if(iMat->hasProprety("uTexture")) {
-                iMat->userData = bouge::UserDataPtr(new TextureUserData(iMat->proprety("uTexture")));
+                iMat->userData = bouge::UserDataPtr(new TextureUserData(dirname(filename) + iMat->proprety("uTexture")));
             }
         }
 

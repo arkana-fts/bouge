@@ -121,6 +121,7 @@ namespace bougeExample {
 
     Viewer* makeViewer(std::vector<std::string>& args);
 
+    std::string dirname(const std::string& file);
 }
 
 #endif // D_BOUGEEXAMPLE_VIEWER_HPP

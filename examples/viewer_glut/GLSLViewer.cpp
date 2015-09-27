@@ -620,9 +620,6 @@ namespace bougeExample
         }
 
         gl_BindVertexArray(0);
-        gl_BindBuffer(GL_ARRAY_BUFFER, 0);
-        gl_BindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
         checkError("GLSLViewer::render");
     }
 

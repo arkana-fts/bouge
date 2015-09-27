@@ -31,9 +31,6 @@
 #include <fstream> // Only to see if a file exists.
 #include <stdexcept>
 
-template<class T, size_t N> T decay_array_to_subtype(T (&a)[N]);
-#define dimension_of(X) (sizeof(X)/sizeof(decay_array_to_subtype(X)))
-
 using namespace bouge;
 
 namespace bougeExample

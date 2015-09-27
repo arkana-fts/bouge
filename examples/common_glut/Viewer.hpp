@@ -35,6 +35,9 @@
 #include <map>
 #include <vector>
 
+template<class T, size_t N> T decay_array_to_subtype(T (&a)[N]);
+#define dimension_of(X) (sizeof(X)/sizeof(decay_array_to_subtype(X)))
+
 namespace bougeExample {
 
     typedef bouge::shared_ptr<bicali::detail::Shader>::type ShaderPtr;

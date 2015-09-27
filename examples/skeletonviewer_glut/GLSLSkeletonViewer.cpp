@@ -62,8 +62,6 @@ namespace bougeExample
             throw std::runtime_error(ssUsage.str());
         }
 
-        // Reuse the shader from Viewer.
-        //this->loadShaders();
         this->loadSkeleton(args[1]);
 
         for(std::size_t i = 2 ; i < args.size() ; ++i) {
@@ -74,34 +72,6 @@ namespace bougeExample
         this->playNextAnim();
         this->useInfoText(this->makeInfoText());
 
-/*
-        if(args.size() > 2) {
-            this->loadAnimation(args[2]);
-            if(m_anim) {
-//                 m_mixer->play(AnimationPtr(new Animation(m_anim, 1.0f, new bouge::ConstantTF(0.5f), new bouge::ConstantTF(1.0f))));
-//                 m_mixer->play(AnimationPtr(new Animation(m_anim, 1.0f, new bouge::LinearTF(1.0f), new bouge::ConstantTF(1.0f))));
-//                 m_mixer->play(AnimationPtr(new Animation(m_anim, 1.0f, new bouge::RepeatTF(new bouge::LinearTF(1.0f)), new bouge::ConstantTF(1.0f))));
-//                 m_mixer->play(AnimationPtr(new Animation(m_anim, 1.0f, new bouge::CycleTF(new bouge::LinearTF(1.0f)), new bouge::ConstantTF(1.0f))));
-//                 m_mixer->play(AnimationPtr(new Animation(m_anim, 1.0f, new bouge::HoldTF(new bouge::LinearTF(1.0f)), new bouge::ConstantTF(1.0f))));
-
-//                 m_mixer->play(AnimationPtr(new Animation(m_anim, 1.0f, new bouge::CycleTF(new bouge::LinearTF(1.0f)), new bouge::ConstantTF(0.5f))));
-//                 m_mixer->play(AnimationPtr(new Animation(m_anim, 1.0f, new bouge::CycleTF(new bouge::LinearTF(1.0f)), new bouge::FadeInTF(0.25f, new bouge::ConstantTF(1.0f)))));
-//                 m_mixer->play(AnimationPtr(new Animation(m_anim, 1.0f, new bouge::RepeatTF(new bouge::LinearTF(1.0f)), new bouge::FadeOutTF(0.25f, new bouge::ConstantTF(1.0f)))));
-                class QuitCB : public AnimationCallback {
-                public:
-                    virtual void operator()(const bouge::Animation& anim)
-                    {
-                        glutExit();
-                        exit(0);
-                    }
-                };
-                AnimationPtr pAnim(new Animation(m_anim, 1.0f));
-                pAnim->addEndCallback(new QuitCB());
-                m_mixer->play(pAnim);
-            }
-//             m_skeleton->play(m_anim);
-        }
-*/
         gl_EnableVertexAttribArray(m_pColorOnlyShader->attrib("aVertex"));
 
         // Setup three VAOs: one for the bone lines, one for bone beginnings and one for their endings.
@@ -223,7 +193,7 @@ namespace bougeExample
 //             Vector vBoneHead = iBone->matrixBoneSpaceToModelSpace() * vDefaultBoneHead;
 //             Vector vBoneTail = iBone->matrixBoneSpaceToModelSpace() * vDefaultBoneTail;
             Vector vBoneHead = iBone->m_absoluteRootPos;
-            Vector vBoneTail = iBone->m_absoluteRootPos + iBone->m_absoluteBoneRot.rotate(Vector(0.0f, iBone->length(), 0.0f));
+            Vector vBoneTail = iBone->m_absoluteRootPos + iBone->m_absoluteBoneRot.rotate(vDefaultBoneTail);
 //             Vector vBoneHead = iBone->animationMatrix() * vDefaultBoneHead;
 //             Vector vBoneTail = iBone->animationMatrix() * vDefaultBoneTail;
 

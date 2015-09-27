@@ -36,6 +36,7 @@ using namespace bouge;
 namespace bougeExample
 {
     static const unsigned int maxBonesPerMesh = 30;
+    static const unsigned int bonesPerVertex = 4;
 
     // This user-data is used to store the texture information along with the material.
     struct TextureUserData : public bouge::UserData {
@@ -107,8 +108,8 @@ namespace bougeExample
             "\n"
             "in vec3 aVertex;\n"
             "in vec3 aNormal;\n"
-            "in vec4 aWeights;\n"
-            "in vec4 aIndices;\n"
+            "in vec"+to_s(bonesPerVertex)+" aWeights;\n"
+            "in vec"+to_s(bonesPerVertex)+" aIndices;\n"
             "\n"
             "out vec4 vPosition;\n"
             "out vec3 vNormal;\n"
@@ -116,7 +117,7 @@ namespace bougeExample
             "void main()\n"
             "{\n"
             "    vec3 localPos = vec3(0.0), localNor = vec3(0.0);\n"
-            "    for(int i = 0 ; i < 4 ; i++) {\n"
+            "    for(int i = 0 ; i < "+to_s(bonesPerVertex)+" ; i++) {\n"
             "        localPos += (uBonesPalette[int(aIndices[i])] * vec4(aVertex, 1.0)).xyz * aWeights[i];\n"
             "        localNor += uBonesPaletteInvTrans[int(aIndices[i])] * aNormal * aWeights[i];\n"
             "    }\n"
@@ -172,8 +173,8 @@ namespace bougeExample
             "in vec3 aVertex;\n"
             "in vec3 aNormal;\n"
             "in vec2 aTexCo;\n"
-            "in vec4 aWeights;\n"
-            "in vec4 aIndices;\n"
+            "in vec"+to_s(bonesPerVertex)+" aWeights;\n"
+            "in vec"+to_s(bonesPerVertex)+" aIndices;\n"
             "\n"
             "out vec4 vPosition;\n"
             "out vec3 vNormal;\n"
@@ -182,7 +183,7 @@ namespace bougeExample
             "void main()\n"
             "{\n"
             "    vec3 localPos = vec3(0.0), localNor = vec3(0.0);\n"
-            "    for(int i = 0 ; i < 4 ; i++) {\n"
+            "    for(int i = 0 ; i < "+to_s(bonesPerVertex)+" ; i++) {\n"
             "        localPos += (uBonesPalette[int(aIndices[i])] * vec4(aVertex, 1.0)).xyz * aWeights[i];\n"
             "        localNor += uBonesPaletteInvTrans[int(aIndices[i])] * aNormal * aWeights[i];\n"
             "    }\n"
@@ -299,7 +300,7 @@ namespace bougeExample
         gl_GenVertexArrays(dimension_of(m_VAOIds), m_VAOIds);
         gl_BindVertexArray(m_VAOIds[0]);
 
-        m_hwmesh = m_model->buildHardwareMesh(maxBonesPerMesh, 4);
+        m_hwmesh = m_model->buildHardwareMesh(maxBonesPerMesh, bonesPerVertex);
 
         // We allow two names for stuff just to be more compatible.
         std::string normal = m_hwmesh->hasAttrib("aVertexNormal") ? "aVertexNormal" : "normal";

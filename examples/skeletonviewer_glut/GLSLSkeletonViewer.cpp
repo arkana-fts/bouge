@@ -137,6 +137,7 @@ namespace bougeExample
         if(m_currAnim == m_anim.end() || ++m_currAnim == m_anim.end())
             m_currAnim = m_anim.begin();
 
+        m_mixer->stopAll();
         m_mixer->play(AnimationPtr(new Animation(*m_currAnim, 1.0f)));
     }
 
@@ -151,6 +152,7 @@ namespace bougeExample
 
         m_currAnim--;
 
+        m_mixer->stopAll();
         m_mixer->play(AnimationPtr(new Animation(*m_currAnim, 1.0f)));
     }
 

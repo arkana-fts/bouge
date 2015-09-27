@@ -1957,10 +1957,12 @@ GLuint Shader::load(const char* sVertCode, const char* sFragCode, const char* sG
             std::string sName = &name[0];
             (*out_uniforms)[sName] = glGetUniformLocation(program, sName.c_str());
 
-            // In case it is an array, we get the id of every single array entry...
-            for(GLint i = 0 ; i+1 < size ; ++i) {
+            // In case it is an array, we get the id of every single array entry.
+            // The name that was returned is defined to include the [0] by the standard.
+            // 7.3.1.1 Naming Active Resources.
+            for(GLint i = 1 ; i < size ; ++i) {
                 std::stringstream arrayname;
-                arrayname << sName << "[" << i << "]";
+                arrayname << sName.substr(0, sName.size()-3) << "[" << i << "]";
                 (*out_uniforms)[arrayname.str()] = glGetUniformLocation(program, arrayname.str().c_str());
             }
         }

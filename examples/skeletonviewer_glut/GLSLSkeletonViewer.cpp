@@ -42,12 +42,12 @@ namespace bougeExample
     GLSLSkeletonViewer::GLSLSkeletonViewer(std::vector<std::string>& args)
         : Viewer(args)
         , m_nVertexComponents(3)
-        , m_stride(0*sizeof(float))
     { }
 
     GLSLSkeletonViewer::~GLSLSkeletonViewer()
     {
         gl_DeleteBuffers(1, &m_VBOId);
+        gl_DeleteVertexArrays(dimension_of(m_VAOIds), m_VAOIds);
     }
 
     void GLSLSkeletonViewer::init(std::vector<std::string>& args)
@@ -104,10 +104,33 @@ namespace bougeExample
 */
         gl_EnableVertexAttribArray(m_pColorOnlyShader->attrib("aVertex"));
 
-        // Prepare the VBO:
+        // Setup three VAOs: one for the bone lines, one for bone beginnings and one for their endings.
+        // All of them share the same VBO into which we'll keep uploading the bone data.
+        gl_GenVertexArrays(dimension_of(m_VAOIds), m_VAOIds);
         gl_GenBuffers(1, &m_VBOId);
-        gl_BindBuffer(GL_ARRAY_BUFFER, m_VBOId);
+
         m_VBOData.resize(m_skeleton->core()->boneCount() * 2 * m_nVertexComponents);
+
+        gl_BindVertexArray(m_VAOIds[0]);
+        gl_BindBuffer(GL_ARRAY_BUFFER, m_VBOId);
+        gl_BindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        gl_VertexAttribPointer(m_pColorOnlyShader->attrib("aVertex"), m_nVertexComponents, GL_FLOAT, GL_FALSE, 0, 0);
+        gl_EnableVertexAttribArray(m_pColorOnlyShader->attrib("aVertex"));
+
+        gl_BindVertexArray(m_VAOIds[1]);
+        gl_BindBuffer(GL_ARRAY_BUFFER, m_VBOId);
+        gl_BindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        GLsizei endpoint_stride = m_nVertexComponents * 2 * sizeof(float);
+        gl_VertexAttribPointer(m_pColorOnlyShader->attrib("aVertex"), m_nVertexComponents, GL_FLOAT, GL_FALSE, endpoint_stride, 0);
+        gl_EnableVertexAttribArray(m_pColorOnlyShader->attrib("aVertex"));
+
+        gl_BindVertexArray(m_VAOIds[2]);
+        gl_BindBuffer(GL_ARRAY_BUFFER, m_VBOId);
+        gl_BindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        gl_VertexAttribPointer(m_pColorOnlyShader->attrib("aVertex"), m_nVertexComponents, GL_FLOAT, GL_FALSE, endpoint_stride, (const GLvoid*)((long)endpoint_stride/2));
+        gl_EnableVertexAttribArray(m_pColorOnlyShader->attrib("aVertex"));
+
+        gl_BindVertexArray(0);
     }
 
     void GLSLSkeletonViewer::loadSkeleton(std::string filename)
@@ -223,39 +246,30 @@ namespace bougeExample
 
         m_pColorOnlyShader->uniformMatrix4fv("uModelViewProjectionMatrix", 1, false, (cam.viewproj() * model).array16f());
         m_pColorOnlyShader->uniformMatrix4fv("uModelViewMatrix", 1, false, (cam.view() * model).array16f());
-        m_pColorOnlyShader->uniform4fv("uColor", 1, white);
 
+        // Upload the current state of bone vertices.
         gl_BindBuffer(GL_ARRAY_BUFFER, m_VBOId);
         gl_BufferData(GL_ARRAY_BUFFER, m_VBOData.size() * sizeof(float), &m_VBOData[0], GL_DYNAMIC_DRAW);
 
-        glEnable(GL_LINE_SMOOTH);
-//         glLineWidth(2.0f);
-
-        gl_VertexAttribPointer(m_pColorOnlyShader->attrib("aVertex"), m_nVertexComponents, GL_FLOAT, GL_FALSE, m_stride, 0);
+        // First rendering the bone lines.
+        // TODO: Figure out why smooth lines and line width don't seem to work. (glEnable(GL_LINE_SMOOTH) and glLineWidth(2.0f))
+        gl_BindVertexArray(m_VAOIds[0]);
+        m_pColorOnlyShader->uniform4fv("uColor", 1, white);
         glDrawArrays(GL_LINES, 0, m_VBOData.size()/m_nVertexComponents);
 
-//         glLineWidth(1.0f);
-        glDisable(GL_LINE_SMOOTH);
-
-        // Now come the head and tail points...
-
-        // first, the heads points in blue
-        GLsizei stride = (m_stride == 0 ? m_nVertexComponents * 2 * sizeof(float) : m_stride * 2);
-        gl_VertexAttribPointer(m_pColorOnlyShader->attrib("aVertex"), m_nVertexComponents, GL_FLOAT, GL_FALSE, stride, 0);
-
+        // Second, the head points in blue
+        gl_BindVertexArray(m_VAOIds[1]);
         m_pColorOnlyShader->uniform4fv("uColor", 1, blue);
-
         glPointSize(7.0f);
         glDrawArrays(GL_POINTS, 0, m_VBOData.size()/m_nVertexComponents/2);
 
-        // then, the tail points in red.
-        gl_VertexAttribPointer(m_pColorOnlyShader->attrib("aVertex"), m_nVertexComponents, GL_FLOAT, GL_FALSE, stride, (const GLvoid*)((long)stride/2));
-
+        // Third, the tail points in red.
+        gl_BindVertexArray(m_VAOIds[2]);
         m_pColorOnlyShader->uniform4fv("uColor", 1, red);
-
         glPointSize(3.0f);
         glDrawArrays(GL_POINTS, 0, m_VBOData.size()/m_nVertexComponents/2);
 
+        gl_BindVertexArray(0);
         checkError("render");
     }
 

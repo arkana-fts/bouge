@@ -52,7 +52,6 @@ namespace bougeExample {
         std::string makeInfoText() const;
 
         int m_nVertexComponents;
-        int m_stride;
 
     private:
         std::vector<bouge::CoreAnimationPtr> m_anim;
@@ -60,6 +59,7 @@ namespace bougeExample {
         bouge::SkeletonInstancePtr m_skeleton;
         bouge::MixerPtr m_mixer;
         std::vector<float> m_VBOData;
+        GLuint m_VAOIds[3];
         GLuint m_VBOId;
     };
 

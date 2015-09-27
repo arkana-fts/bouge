@@ -7,15 +7,15 @@ Bouge v0.5
 
 1. The goal(s) of bouge
 2. How do I compile and link bouge to my project?
-    a. What are all those libraries?
-    b. Use bouge as a dynamic library
-    c. Use bouge as a static library
-    d. Embed bouge right into your project
-    e. An important note to MSVC users
-    f. Integration using CMake
+    1. What are all those libraries?
+    2. Use bouge as a dynamic library
+    3. Use bouge as a static library
+    4. Embed bouge right into your project
+    5. An important note to MSVC users
+    6. Integration using CMake
 3. Learning to use bouge
-    a. Game developers
-    b. Game artists
+    1. Game developers
+    2. Game artists
 4. Known issues
 
 
@@ -44,8 +44,8 @@ of a better, more flexible and modern library than Cal3D, which it was using.
 
 Bouge uses CMake as a build system. You have three choices to include bouge in your project:
 
-a. What are all those libraries?
---------------------------------
+2.1. What are all those libraries?
+----------------------------------
 
 While developing bouge, I wanted to keep things separate, that's
 why now there are several libraries in bouge. To sum it up:
@@ -75,8 +75,8 @@ Thus, in a standard use case, you'll need all of the following libs:
 - `bouge-xml-common`
 - `bouge-tinyxml`
 
-b. Use bouge as a dynamic library
----------------------------------
+2.2. Use bouge as a dynamic library
+-----------------------------------
 
 In this case, you have to set some CMake settings. You can do this by
 running the CMake-GUI on windows or by either running "ccmake" on unix/linux
@@ -88,8 +88,8 @@ Then, the compilation will give you dynamic libraries (.dll, .so) which you can 
 
 Note that you need not to define any preprocessors in your project.
 
-c. Use bouge as a static library
---------------------------------
+2.3. Use bouge as a static library
+----------------------------------
 
 In this case, you can just execute CMake and the default settings will
 create all bouge libraries as static libraries (.lib, .a).
@@ -98,8 +98,8 @@ Then, you can link the libraries you need (see a.) to your project.
 
 Finally, define the `BOUGE_STATIC` preprocessor in your project.
 
-d. Embed bouge right into your project
---------------------------------------
+2.4. Embed bouge right into your project
+----------------------------------------
 
 If you go with this approach, you'll need to place all the files from the
 `src` and `include` folders into the folders of your project and
@@ -112,8 +112,8 @@ but keep in mind that all XML file formats need the files in `XMLParserCommon`.
 
 That's it, you're ready to use bouge and need no link step.
 
-e. An important note to MSVC users
-----------------------------------
+2.5. An important note to MSVC users
+------------------------------------
 
 In MSVC, it is an important question whether to link to the CRT (C runtime)
 statically or dynamically and whether to use the multithreaded version or not.
@@ -127,8 +127,8 @@ runtime library.
 Note that this version not always works yet. If you have too much trouble,
 you might just go with option "d. Embed bouge right into your project".
 
-f. Integration using CMake
---------------------------
+2.6. Integration using CMake
+----------------------------
 
 In the case your project also uses CMake, you can try to find if bouge
 is installed on the pc already by using the Findbouge CMake macro.
@@ -140,8 +140,8 @@ is installed on the pc already by using the Findbouge CMake macro.
 
 There are mainly two groups of users that may want (or need) to use bouge:
 
-a. Game developers
-------------------
+3.1. Game developers
+--------------------
 
 Game developers have to learn how to program using the bouge library,
 how to load, draw and manipulate bouge models, and even how to add an importer
@@ -167,8 +167,8 @@ the `viewer-glut` and `staticviewer-glut` examples:
 - `io`: Loading and saving again.
 - `plot-tf`: Create a plot (png) of any time function
 
-b. Game artists
----------------
+3.2. Game artists
+-----------------
 
 Artists most often need to know what kind of things the bouge format supports
 and what they have to care about when exporting their models.

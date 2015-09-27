@@ -1,4 +1,4 @@
-# Locate the moulin bouge library
+# Locate the bouge library
 #
 # This module defines
 #  BOUGE_FOUND, if false, do not try to link to SFML
@@ -10,7 +10,7 @@
 # By default, the dynamic libraries of BOUGE will be found. To find the static ones instead,
 # you must set the BOUGE_STATIC_LIBRARIES variable to TRUE before calling find_package(bouge ...).
 #
-# If moulin bouge is not installed in a standard path, you can use the BOUGEDIR CMake variable
+# If bouge is not installed in a standard path, you can use the BOUGEDIR CMake variable
 # to tell CMake where BOUGE is.
 
 # deduce the libraries suffix from the options
@@ -87,7 +87,7 @@ foreach(FIND_BOUGE_COMPONENT ${BOUGE_FIND_COMPONENTS})
 endforeach()
 
 if(BOUGE_FIND_REQUIRED AND NOT BOUGE_VERSION_OK)
-    message(SEND_ERROR "Bad moulin bouge version (requested: ${BOUGE_FIND_VERSION}, found: ${BOUGE_VERSION_MAJOR}.${BOUGE_VERSION_MINOR})")
+    message(SEND_ERROR "Bad bouge version (requested: ${BOUGE_FIND_VERSION}, found: ${BOUGE_VERSION_MAJOR}.${BOUGE_VERSION_MINOR})")
     set(BOUGE_FOUND FALSE)
 else()
     # handle the QUIETLY and REQUIRED arguments and set BOUGE_FOUND to TRUE if all listed variables are TRUE

@@ -3,7 +3,7 @@ Bouge
 
 (BSD license)
 
-(Moulin) Bouge - Copyright (c) 2011 Lucas Beyer - pompei2@gmail.com
+Bouge - Copyright (c) 2011 Lucas Beyer - pompei2@gmail.com
 
 This software is provided 'as-is', without any express or
 implied warranty. In no event will the authors be held
@@ -45,7 +45,7 @@ EXAMPLE 3D model files
 ======================
 
     All models are CC0 by Lucas Beyer (aka Pompei2), except the following, which
-    were all adapted for use in moulin bouge by Lucas Beyer (aka Pompei2):
+    were all adapted for use in bouge by Lucas Beyer (aka Pompei2):
 
         - The pumpkin is CC0 by mrpoly (http://opengameart.org/content/customizable-pumpkins)
         - The buggy is CC0 by dawidh (http://www.blendswap.com/3D-models/vehicles/buggy)
